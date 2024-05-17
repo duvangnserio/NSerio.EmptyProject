@@ -1,0 +1,11 @@
+{
+  "locales": {
+    "flagIso": "es", 
+  "displayName": "Español"
+  },
+  "homeView": {
+    "title": "Bienvenido a tu Aplicación NSerio Angular",
+    "subtitle": "Agular 17.3 + PrimeNG",
+    "linksCaption": "Enlaces Importantes"
+  }
+}

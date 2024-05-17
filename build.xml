@@ -1,0 +1,75 @@
+<BuildTools> 
+  <BuildHelper> 
+    <Projects> 
+      <Build> 
+        <Project path="Source\NSerio.EmptyProject.Core\NSerio.EmptyProject.Core.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+        <Project path="Source\NSerio.EmptyProject.EventHandlers\NSerio.EmptyProject.EventHandlers.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+        <Project path="Source\NSerio.EmptyProject.Agents\NSerio.EmptyProject.Agents.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+        <Project path="Source\NSerio.EmptyProject.Kepler.Services.Interfaces\NSerio.EmptyProject.Kepler.Services.Interfaces.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+        <Project path="Source\NSerio.EmptyProject.Kepler.Services\NSerio.EmptyProject.Kepler.Services.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+        <Project path="Source\NSerio.EmptyProject.WebApps\NSerio.EmptyProject.WebApps.njsproj">
+            <Platforms>
+                <Platform>AnyCPU</Platform>
+            </Platforms>
+        </Project>
+      </Build>
+      <Ignore>
+        <Project path="Source\NSerio.EmptyProject.Test\NSerio.EmptyProject.Test.csproj">
+            <Platforms>
+                <Platform>x64</Platform>
+            </Platforms>
+        </Project>
+      </Ignore>
+    </Projects> 
+    <References> 
+      <Maps /> 
+      <Adds /> 
+    </References>
+  </BuildHelper>  
+  <RAPBuilder> 
+    <Applications> 
+      <Application name="NSerio.EmptyProject" generatenuspec="false">
+        <Destination>.\Delivery\NSerio.EmptyProject.rap</Destination>
+        <ApplicationSchema>.\Resources\application.xml</ApplicationSchema>
+        <Assemblies>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\NSerio.EmptyProject.Core.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.EventHandlers\bin\x64\Release\NSerio.EmptyProject.EventHandlers.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\NSerio.EmptyProject.Agents.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\NSerio.EmptyProject.Kepler.Services.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services.Interfaces\bin\x64\Release\NSerio.EmptyProject.Kepler.Services.Interfaces.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\WorkloadDiscovery.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\NSerio.Utils.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\NSerio.Utils.Relativity.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\NSerio.Utils.SimpleInjector.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\SimpleInjector.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Polly.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Newtonsoft.Json.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Relativity.Environment.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Relativity.Shared.dll</Assembly>
+        </Assemblies>
+        <ResourceFiles />
+        <CustomPages />
+      </Application>
+    </Applications> 
+  </RAPBuilder> 
+</BuildTools>

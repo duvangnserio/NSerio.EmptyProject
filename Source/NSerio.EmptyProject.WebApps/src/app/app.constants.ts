@@ -1,0 +1,1 @@
+export const KEPLER_SERVICE_MODULE = '________KeplerServiceModule________';

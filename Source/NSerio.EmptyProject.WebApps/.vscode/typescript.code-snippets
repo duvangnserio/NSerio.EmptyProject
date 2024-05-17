@@ -1,0 +1,176 @@
+{
+  "Add All regions": {
+      "prefix": "reg-all",
+      "body": [
+          "//#region [Injects]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Injects]",
+          "",
+          "//#region [Properties]",
+          "",
+          "$2",
+          "",
+          "//#endregion [Properties]",
+          "",
+          "//#region [Private Functions]",
+          "",
+          "$3",
+          "",
+          "//#endregion [Private Functions]",
+          "",
+          "//#region [Public Functions]",
+          "",
+          "$4",
+          "",
+          "//#endregion [Public Functions]",
+          "",
+          "//#region [Constructor]",
+          "",
+          "$5",
+          "",
+          "//#endregion [Constructor]",
+          "",
+          "//#region [Lifecicle]",
+          "",
+          "$6",
+          "",
+          "//#endregion [Lifecicle]",
+          "$7"
+      ]
+  },
+  "Add Region to Injects": {
+      "prefix": "reg-injects",
+      "body": [
+          "//#region [Injects]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Injects]"
+      ]
+  },
+  "Add Region to Properties": {
+      "prefix": "reg-props",
+      "body": [
+          "//#region [Properties]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Properties]"
+      ]
+  },
+  "Add Region to Private Functions": {
+      "prefix": "reg-priv-func",
+      "body": [
+          "//#region [Private Functions]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Private Functions]"
+      ]
+  },
+  "Add Region to Public Functions": {
+      "prefix": "reg-pub-func",
+      "body": [
+          "//#region [Public Functions]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Public Functions]"
+      ]
+  },
+  "Add Region to Constructor": {
+      "prefix": "reg-constrctor",
+      "body": [
+          "//#region [Constructor]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Constructor]"
+      ]
+  },
+  "Add Region to Lifecycle": {
+      "prefix": "reg-lifecycle",
+      "body": [
+          "//#region [Lifecycle]",
+          "",
+          "$1",
+          "",
+          "//#endregion [Lifecycle]"
+      ]
+  },
+  "Add Signal Store": {
+      "prefix": "init-store",
+      "body": [
+          "import { withDevtools } from '@angular-architects/ngrx-toolkit';",
+          "import { signalStore, withState } from '@ngrx/signals';",
+          "",
+          "const $1 = signalStore(",
+          "  { providedIn: 'root' },",
+          "  withDevtools('$2'),",
+          "  withState($2),",
+          ");",
+          "",
+          "export default $1;"
+      ]
+  },
+  "Add Initial State": {
+      "prefix": "init-state",
+      "body": [
+          "const $1: $2 = {",
+          "  $3",
+          "};",
+          "",
+          "export default $1;"
+      ]
+  },
+  "Add Store Methods": {
+      "prefix": "init-methods",
+      "body": [
+          "import { signalStoreFeature, type, withMethods } from '@ngrx/signals';",
+          "",
+          "export default function $1() {",
+          "  return signalStoreFeature(",
+          "    { state: type<$2>() },",
+          "    withMethods((store) => {",
+          "",
+          "      return {",
+          "",
+          "      };",
+          "    }),",
+          "  );",
+          "}"
+      ]
+  },
+  "Add Store Selectors": {
+    "prefix": "init-selectors",
+    "body": [
+        "import { signalStoreFeature, type, withComputed } from '@ngrx/signals';",
+        "",
+        "export default function $1() {",
+        "  return signalStoreFeature(",
+        "    { state: type<$2>() },",
+        "    withComputed((store) => ({",
+        "    $3",
+        "    })),",
+        "  );",
+        "}"
+    ]
+  },
+  "Add Store Mutations": {
+    "prefix": "init-mutations",
+    "body": [
+        "import { signalStoreFeature, type, withMethods } from '@ngrx/signals';",
+        "",
+        "export default function $1() {",
+        "  return signalStoreFeature(",
+        "    { state: type<$2>() },",
+        "    withMethods((store) => ({",
+        "    $3",
+        "    })),",
+        "  );",
+        "}"
+    ]
+  },
+}

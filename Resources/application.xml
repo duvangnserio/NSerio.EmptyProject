@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ArtifactViewFields />
+  <Assemblies>
+    <Assembly>
+      <ArtifactId>7439714</ArtifactId>
+      <Keywords />
+      <Name>NSerio.EmptyProject.Core.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439715</ArtifactId>
+      <Keywords />
+      <Name>NSerio.EmptyProject.EventHandlers.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439716</ArtifactId>
+      <Keywords />
+      <Name>NSerio.EmptyProject.Agents.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439717</ArtifactId>
+      <Keywords />
+      <Name>NSerio.EmptyProject.Kepler.Services.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439718</ArtifactId>
+      <Keywords />
+      <Name>NSerio.EmptyProject.Kepler.Services.Interfaces.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439719</ArtifactId>
+      <Keywords />
+      <Name>WorkloadDiscovery.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439720</ArtifactId>
+      <Keywords />
+      <Name>NSerio.Utils.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439721</ArtifactId>
+      <Keywords />
+      <Name>NSerio.Utils.Relativity.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439722</ArtifactId>
+      <Keywords />
+      <Name>NSerio.Utils.SimpleInjector.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439723</ArtifactId>
+      <Keywords />
+      <Name>SimpleInjector.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439724</ArtifactId>
+      <Keywords />
+      <Name>Polly.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439725</ArtifactId>
+      <Keywords />
+      <Name>Newtonsoft.Json.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439726</ArtifactId>
+      <Keywords />
+      <Name>Relativity.Environment.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439727</ArtifactId>
+      <Keywords />
+      <Name>Relativity.Shared.dll</Name>
+      <Notes />
+    </Assembly>
+  </Assemblies>
+  <ResourceFiles />
+  <ExternalTabs />
+  <ExtractionDate>2023-07-13T21:54:46.0701175Z</ExtractionDate>
+  <Guid>86c02553-a459-47ee-9a5b-b8d517cd0f9b</Guid>
+  <Name>NSerio.EmptyProject</Name>
+  <Objects />
+  <ParentTabs />
+  <RelativityVersion>55.0.21.0</RelativityVersion>
+  <Version>0.0.0.1</Version>
+  <SchemaVersion>0.0.0.1</SchemaVersion>
+  <TabDisplay>false</TabDisplay>
+  <OriginSignature>e7e47b90-b99b-4f4f-9f54-11a92ee54c7e</OriginSignature>
+  <MasterScripts />
+  <ApplicationScripts />
+  <CustomPages />
+  <AgentTypes />
+  <IsRelativityApplication>true</IsRelativityApplication>
+  <InstallEventHandlers>
+    <InstallEventHandler>
+      <ArtifactId>1039121</ArtifactId>
+      <AssemblyArtifactId>1030691</AssemblyArtifactId>
+      <Name>NSerio.EmptyProject.EventHandlers.PostInstallInstance</Name>
+      <Guid>40683ef1-26b0-49d4-9c5d-86135c0da7ef</Guid>
+      <Guids>fed2e3d0-c907-46dc-856e-91e6e3249977</Guids>
+      <ExecutionType>8</ExecutionType>
+      <Order>1</Order>
+      <AssemblyName>NSerio.EmptyProject.EventHandlers.dll</AssemblyName>
+      <ApplicationVersion>0.0.0.1</ApplicationVersion>
+      <RunTarget>1</RunTarget>
+    </InstallEventHandler>
+    <InstallEventHandler>
+      <ArtifactId>1039122</ArtifactId>
+      <AssemblyArtifactId>1030691</AssemblyArtifactId>
+      <Name>NSerio.EmptyProject.EventHandlers.PostInstallWorkspace</Name>
+      <Guid>4e588936-f85e-496d-8b57-6fb3a2a8ea83</Guid>
+      <Guids>87e98a36-a9ef-4819-8cbe-d8e020dd93b4</Guids>
+      <ExecutionType>8</ExecutionType>
+      <Order>2</Order>
+      <AssemblyName>NSerio.EmptyProject.EventHandlers.dll</AssemblyName>
+      <ApplicationVersion>0.0.0.1</ApplicationVersion>
+      <RunTarget>0</RunTarget>
+    </InstallEventHandler>
+    <InstallEventHandler>
+      <ArtifactId>1039123</ArtifactId>
+      <AssemblyArtifactId>1030691</AssemblyArtifactId>
+      <Name>NSerio.EmptyProject.EventHandlers.PreUninstall</Name>
+      <Guid>0740e88d-f674-4ce4-9141-94f39c866167</Guid>
+      <Guids>76874054-e697-4972-bf43-a6636b90d3e1</Guids>
+      <ExecutionType>12</ExecutionType>
+      <Order>3</Order>
+      <AssemblyName>NSerio.EmptyProject.EventHandlers.dll</AssemblyName>
+      <ApplicationVersion>0.0.0.1</ApplicationVersion>
+      <RunTarget>0</RunTarget>
+    </InstallEventHandler>
+    <InstallEventHandler>
+      <ArtifactId>1039124</ArtifactId>
+      <AssemblyArtifactId>1030691</AssemblyArtifactId>
+      <Name>NSerio.EmptyProject.EventHandlers.PreInstallWorkspace</Name>
+      <Guid>5b9e7aeb-5dce-4e89-bd4b-d8b07ea234e4</Guid>
+      <Guids>7b92d810-4803-4066-8904-a7b12ad96598</Guids>
+      <ExecutionType>7</ExecutionType>
+      <Order>4</Order>
+      <AssemblyName>NSerio.EmptyProject.EventHandlers.dll</AssemblyName>
+      <ApplicationVersion>0.0.0.1</ApplicationVersion>
+      <RunTarget>0</RunTarget>
+    </InstallEventHandler>
+  </InstallEventHandlers>
+  <SavedSearches />
+  <SearchContainers />
+  <SearchProviders />
+  <EnvironmentVariables>
+    <SearchAsConditionCriteriaID>1000471</SearchAsConditionCriteriaID>
+    <FullTextAll>1000182</FullTextAll>
+  </EnvironmentVariables>
+  <GlobalApplication>false</GlobalApplication>
+  <ToggleMappings />
+  <RelativityScriptIds />
+  <ViewIds />
+  <DashboardIds />
+  <LayoutIds />
+  <FieldIds />
+  <ChoiceIds />
+  <ObjectTypeIds />
+  <TabIds />
+  <Locked>true</Locked>
+</Application>

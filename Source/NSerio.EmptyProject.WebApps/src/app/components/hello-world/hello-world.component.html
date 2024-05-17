@@ -1,0 +1,21 @@
+<div class="mt-6">
+  <div class="mt-10 text-center">
+    <img src="./assets/images/nserio.png" height="25" alt="logo-image" />
+    <h1 class="my-custom-title">
+      {{ title() }}
+    </h1>
+    <h3 class="my-4 text-alert">
+      {{ subtitle() }}
+    </h3>
+    <h5>
+      {{ version() }}
+    </h5>
+    <p-divider />
+    <div class="pt-6 pb-3">
+      {{ "homeView.linksCaption" | translate }}
+    </div>
+    @for (link of links(); track $index) {
+      <a class="my-link" [href]="link.url" target="_blank">{{ link.text }}</a>
+    }
+  </div>
+</div>

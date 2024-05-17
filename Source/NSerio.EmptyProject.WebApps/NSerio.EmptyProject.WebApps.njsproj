@@ -1,0 +1,370 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>NSerio.EmptyProject.WebApps</Name>
+    <RootNamespace>NSerio.EmptyProject.WebApps</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>3898c2e0-c608-4c81-9803-30d5bc2fa4cd</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>node_modules/@angular/cli/bin/ng.js</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <NodejsPort>4200</NodejsPort>
+    <StartWebBrowser>true</StartWebBrowser>
+    <ScriptArguments>serve</ScriptArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".vscode\extensions.json" />
+    <Content Include=".vscode\typescript.code-snippets" />
+    <Content Include="src\app\components\hello-world\hello-world.component.html" />
+    <Content Include="src\app\components\hello-world\hello-world.component.scss" />
+    <Content Include="src\app\components\hello-world\hello-world.component.spec.ts" />
+    <Content Include="src\app\components\hello-world\hello-world.component.ts" />
+    <Content Include="src\app\components\switch-lang\switch-lang.component.html" />
+    <Content Include="src\app\components\switch-lang\switch-lang.component.scss" />
+    <Content Include="src\app\components\switch-lang\switch-lang.component.spec.ts" />
+    <Content Include="src\app\components\switch-lang\switch-lang.component.ts" />
+    <Content Include="src\app\directives\.gitkeep" />
+    <Content Include="src\app\factories\translate-http-loader.factory.ts" />
+    <Content Include="src\app\guards\.gitkeep" />
+    <Content Include="src\app\helpers\computed.helper.ts" />
+    <Content Include="src\app\helpers\form.helper.ts" />
+    <Content Include="src\app\helpers\http-client.helper.ts" />
+    <Content Include="src\app\helpers\mutations.helper.ts" />
+    <Content Include="src\app\helpers\uri.helper.ts" />
+    <Content Include="src\app\interceptors\http-error.interceptor.spec.ts" />
+    <Content Include="src\app\interceptors\http-error.interceptor.ts" />
+    <Content Include="src\app\interceptors\http-request.interceptor.spec.ts" />
+    <Content Include="src\app\interceptors\http-request.interceptor.ts" />
+    <Content Include="src\app\interfaces\.gitkeep" />
+    <Content Include="src\app\models\example.model.ts" />
+    <Content Include="src\app\models\language.model.ts" />
+    <Content Include="src\app\models\link.model.ts" />
+    <Content Include="src\app\pipes\.gitkeep" />
+    <Content Include="src\app\services\base-service\base.service.spec.ts" />
+    <Content Include="src\app\services\base-service\base.service.ts" />
+    <Content Include="src\app\services\example-service\example.service.spec.ts" />
+    <Content Include="src\app\services\example-service\example.service.ts" />
+    <Content Include="src\app\store\example\index.ts" />
+    <Content Include="src\app\store\example\example.methods.ts" />
+    <Content Include="src\app\store\example\example.mutations.ts" />
+    <Content Include="src\app\store\example\example.selectors.ts" />
+    <Content Include="src\app\store\example\example.state.ts" />
+    <Content Include="src\app\store\hello-world\index.ts" />
+    <Content Include="src\app\store\hello-world\hello-world.methods.ts" />
+    <Content Include="src\app\store\hello-world\hello-world.mutations.ts" />
+    <Content Include="src\app\store\hello-world\hello-world.selectors.ts" />
+    <Content Include="src\app\store\hello-world\hello-world.state.ts" />
+    <Content Include="src\app\store\language\index.ts" />
+    <Content Include="src\app\store\language\language.methods.ts" />
+    <Content Include="src\app\store\language\language.mutations.ts" />
+    <Content Include="src\app\store\language\language.selectors.ts" />
+    <Content Include="src\app\store\language\language.state.ts" />
+    <Content Include="src\app\store\models\example-state.model.ts" />
+    <Content Include="src\app\store\models\hello-world-state.model.ts" />
+    <Content Include="src\app\store\models\language-state.model.ts" />
+    <Content Include="src\app\store\index.ts" />
+    <Content Include="src\app\store\helpers.ts" />
+    <Content Include="src\app\views\home\home.view.html" />
+    <Content Include="src\app\views\home\home.view.scss" />
+    <Content Include="src\app\views\home\home.view.spec.ts" />
+    <Content Include="src\app\views\home\home.view.ts" />
+    <Content Include="src\app\app.component.html" />
+    <Content Include="src\app\app.component.scss" />
+    <Content Include="src\app\app.component.spec.ts" />
+    <Content Include="src\app\app.component.ts" />
+    <Content Include="src\app\app.config.ts" />
+    <Content Include="src\app\app.constants.ts" />
+    <Content Include="src\app\app.routes.ts" />
+    <Content Include="src\assets\themes\material\_compact.scss" />
+    <Content Include="src\assets\themes\material\_extensions.scss" />
+    <Content Include="src\assets\themes\material\_fonts.scss" />
+    <Content Include="src\assets\themes\material\_variables.scss" />
+    <Content Include="src\assets\themes\material\theme.scss" />
+    <Content Include="src\assets\themes\material\extensions\_accordion.scss" />
+    <Content Include="src\assets\themes\material\extensions\_autocomplete.scss" />
+    <Content Include="src\assets\themes\material\extensions\_breadcrumb.scss" />
+    <Content Include="src\assets\themes\material\extensions\_button.scss" />
+    <Content Include="src\assets\themes\material\extensions\_calendar.scss" />
+    <Content Include="src\assets\themes\material\extensions\_carousel.scss" />
+    <Content Include="src\assets\themes\material\extensions\_cascadeselect.scss" />
+    <Content Include="src\assets\themes\material\extensions\_checkbox.scss" />
+    <Content Include="src\assets\themes\material\extensions\_chips.scss" />
+    <Content Include="src\assets\themes\material\extensions\_contextmenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_datatable.scss" />
+    <Content Include="src\assets\themes\material\extensions\_dropdown.scss" />
+    <Content Include="src\assets\themes\material\extensions\_fieldset.scss" />
+    <Content Include="src\assets\themes\material\extensions\_float_label.scss" />
+    <Content Include="src\assets\themes\material\extensions\_galleria.scss" />
+    <Content Include="src\assets\themes\material\extensions\_input.scss" />
+    <Content Include="src\assets\themes\material\extensions\_inputgroup.scss" />
+    <Content Include="src\assets\themes\material\extensions\_inputmask.scss" />
+    <Content Include="src\assets\themes\material\extensions\_inputnumber.scss" />
+    <Content Include="src\assets\themes\material\extensions\_inputswitch.scss" />
+    <Content Include="src\assets\themes\material\extensions\_listbox.scss" />
+    <Content Include="src\assets\themes\material\extensions\_megamenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_menu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_menubar.scss" />
+    <Content Include="src\assets\themes\material\extensions\_metergroup.scss" />
+    <Content Include="src\assets\themes\material\extensions\_mixins.scss" />
+    <Content Include="src\assets\themes\material\extensions\_multiselect.scss" />
+    <Content Include="src\assets\themes\material\extensions\_orderlist.scss" />
+    <Content Include="src\assets\themes\material\extensions\_overlaypanel.scss" />
+    <Content Include="src\assets\themes\material\extensions\_paginator.scss" />
+    <Content Include="src\assets\themes\material\extensions\_panel.scss" />
+    <Content Include="src\assets\themes\material\extensions\_panelmenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_picklist.scss" />
+    <Content Include="src\assets\themes\material\extensions\_progressbar.scss" />
+    <Content Include="src\assets\themes\material\extensions\_radiobutton.scss" />
+    <Content Include="src\assets\themes\material\extensions\_rating.scss" />
+    <Content Include="src\assets\themes\material\extensions\_scrollpanel.scss" />
+    <Content Include="src\assets\themes\material\extensions\_selectbutton.scss" />
+    <Content Include="src\assets\themes\material\extensions\_slidemenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_slider.scss" />
+    <Content Include="src\assets\themes\material\extensions\_speeddial.scss" />
+    <Content Include="src\assets\themes\material\extensions\_splitbutton.scss" />
+    <Content Include="src\assets\themes\material\extensions\_splitter.scss" />
+    <Content Include="src\assets\themes\material\extensions\_steps.scss" />
+    <Content Include="src\assets\themes\material\extensions\_tabmenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_tabview.scss" />
+    <Content Include="src\assets\themes\material\extensions\_tieredmenu.scss" />
+    <Content Include="src\assets\themes\material\extensions\_timeline.scss" />
+    <Content Include="src\assets\themes\material\extensions\_togglebutton.scss" />
+    <Content Include="src\assets\themes\material\extensions\_toolbar.scss" />
+    <Content Include="src\assets\themes\material\extensions\_tooltip.scss" />
+    <Content Include="src\assets\themes\material\extensions\_tree.scss" />
+    <Content Include="src\assets\themes\material\extensions\_treeselect.scss" />
+    <Content Include="src\assets\themes\material\extensions\_treetable.scss" />
+    <Content Include="src\assets\themes\material\extensions\_variables.scss" />
+    <Content Include="src\assets\themes\material\extensions\_vendor_extensions.scss" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="src\assets\themes\material\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="src\assets\themes\theme-base\_colors.scss" />
+    <Content Include="src\assets\themes\theme-base\_common.scss" />
+    <Content Include="src\assets\themes\theme-base\_components.scss" />
+    <Content Include="src\assets\themes\theme-base\_mixins.scss" />
+    <Content Include="src\assets\themes\theme-base\components\button\_button.scss" />
+    <Content Include="src\assets\themes\theme-base\components\button\_speeddial.scss" />
+    <Content Include="src\assets\themes\theme-base\components\button\_splitbutton.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_carousel.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_datatable.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_dataview.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_filter.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_orderlist.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_organizationchart.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_paginator.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_picklist.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_timeline.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_tree.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_treetable.scss" />
+    <Content Include="src\assets\themes\theme-base\components\data\_virtualscroller.scss" />
+    <Content Include="src\assets\themes\theme-base\components\file\_fileupload.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_autocomplete.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_calendar.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_cascadeselect.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_checkbox.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_chips.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_colorpicker.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_dropdown.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_editor.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_iconfield.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputgroup.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputicon.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputmask.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputnumber.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputotp.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputswitch.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_inputtext.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_listbox.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_multiselect.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_password.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_radiobutton.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_rating.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_selectbutton.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_slider.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_togglebutton.scss" />
+    <Content Include="src\assets\themes\theme-base\components\input\_treeselect.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_breadcrumb.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_contextmenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_dock.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_megamenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_menu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_menubar.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_panelmenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_slidemenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_steps.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_tabmenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\menu\_tieredmenu.scss" />
+    <Content Include="src\assets\themes\theme-base\components\messages\_inlinemessage.scss" />
+    <Content Include="src\assets\themes\theme-base\components\messages\_message.scss" />
+    <Content Include="src\assets\themes\theme-base\components\messages\_toast.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_avatar.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_badge.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_blockui.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_chip.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_inplace.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_metergroup.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_progressbar.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_scrolltop.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_skeleton.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_tag.scss" />
+    <Content Include="src\assets\themes\theme-base\components\misc\_terminal.scss" />
+    <Content Include="src\assets\themes\theme-base\components\multimedia\_galleria.scss" />
+    <Content Include="src\assets\themes\theme-base\components\multimedia\_image.scss" />
+    <Content Include="src\assets\themes\theme-base\components\overlay\_confirmpopup.scss" />
+    <Content Include="src\assets\themes\theme-base\components\overlay\_dialog.scss" />
+    <Content Include="src\assets\themes\theme-base\components\overlay\_overlaypanel.scss" />
+    <Content Include="src\assets\themes\theme-base\components\overlay\_sidebar.scss" />
+    <Content Include="src\assets\themes\theme-base\components\overlay\_tooltip.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_accordion.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_card.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_divider.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_fieldset.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_panel.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_scrollpanel.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_splitter.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_tabview.scss" />
+    <Content Include="src\assets\themes\theme-base\components\panel\_toolbar.scss" />
+    <Content Include="src\assets\styles\flag-icons.min.css" />
+    <Content Include="src\assets\i18n\en.json" />
+    <Content Include="src\assets\i18n\es.json" />
+    <Content Include="src\assets\images\flag-placeholder.png" />
+    <Content Include="src\assets\images\full-logo.png" />
+    <Content Include="src\assets\images\logo.png" />
+    <Content Include="src\assets\images\logo.svg" />
+    <Content Include="src\assets\images\nserio.png" />
+    <Content Include="src\environments\environment.development.ts" />
+    <Content Include="src\environments\environment.ts" />
+    <Content Include="src\favicon.ico" />
+    <Content Include="src\index.html" />
+    <Content Include="src\main.ts" />
+    <Content Include="src\styles.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".vscode\" />
+    <Folder Include="src\" />
+    <Folder Include="src\app\" />
+    <Folder Include="src\app\components\" />
+    <Folder Include="src\app\components\hello-world\" />
+    <Folder Include="src\app\components\switch-lang\" />
+    <Folder Include="src\app\directives\" />
+    <Folder Include="src\app\factories\" />
+    <Folder Include="src\app\helpers\" />
+    <Folder Include="src\app\guards\" />
+    <Folder Include="src\app\interceptors\" />
+    <Folder Include="src\app\interfaces\" />
+    <Folder Include="src\app\models\" />
+    <Folder Include="src\app\pipes\" />
+    <Folder Include="src\app\services\" />
+    <Folder Include="src\app\services\base-service\" />
+    <Folder Include="src\app\services\example-service\" />
+    <Folder Include="src\app\store\" />
+    <Folder Include="src\app\store\example" />
+    <Folder Include="src\app\store\hello-world" />
+    <Folder Include="src\app\store\language" />
+    <Folder Include="src\app\store\models" />
+    <Folder Include="src\app\views\" />
+    <Folder Include="src\app\views\home\" />
+    <Folder Include="src\assets\" />
+    <Folder Include="src\assets\i18n\" />
+    <Folder Include="src\assets\images\" />
+    <Folder Include="src\assets\styles\" />
+    <Folder Include="src\assets\themes\" />
+    <Folder Include="src\assets\themes\material-light\" />
+    <Folder Include="src\assets\themes\material-light\extensions\" />
+    <Folder Include="src\assets\themes\material-light\fonts\" />
+    <Folder Include="src\assets\themes\material\" />
+    <Folder Include="src\assets\themes\material\extensions\" />
+    <Folder Include="src\assets\themes\material\fonts\" />
+    <Folder Include="src\assets\themes\theme-base\" />
+    <Folder Include="src\assets\themes\theme-base\components\" />
+    <Folder Include="src\assets\themes\theme-base\components\button\" />
+    <Folder Include="src\assets\themes\theme-base\components\data\" />
+    <Folder Include="src\assets\themes\theme-base\components\file\" />
+    <Folder Include="src\assets\themes\theme-base\components\input\" />
+    <Folder Include="src\assets\themes\theme-base\components\menu\" />
+    <Folder Include="src\assets\themes\theme-base\components\messages\" />
+    <Folder Include="src\assets\themes\theme-base\components\misc\" />
+    <Folder Include="src\assets\themes\theme-base\components\multimedia\" />
+    <Folder Include="src\assets\themes\theme-base\components\overlay\" />
+    <Folder Include="src\assets\themes\theme-base\components\panel\" />
+    <Folder Include="src\environments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include=".editorconfig" />
+    <Compile Include=".gitignore" />
+    <Compile Include=".prettierrc" />
+    <Compile Include="angular.json" />
+    <Compile Include="package-lock.json" />
+    <Compile Include="package.json" />
+    <Compile Include="README.md" />
+    <Content Include="tsconfig.app.json" />
+    <Content Include="tsconfig.json" />
+    <Content Include="tsconfig.spec.json" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <PropertyGroup>
+    <PostBuildEvent>
+      npm run build
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

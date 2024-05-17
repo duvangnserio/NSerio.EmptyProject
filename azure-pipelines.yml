@@ -1,0 +1,53 @@
+# Variable 'Major' was defined in the Variables tab
+# Variable 'Minor' was defined in the Variables tab
+# Variable 'Patch' was defined in the Variables tab
+# Variable 'Release' was defined in the Variables tab
+variables:
+- name: BuildParameters.solution
+  value: '**\*.sln'
+name: $(date:yyyyMMdd)$(rev:.r)
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/develop
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    name: CA-POOL
+  steps:
+  - checkout: self
+  - task: NuGetToolInstaller@0
+    displayName: Use NuGet 4.4.1
+    inputs:
+      versionSpec: 4.4.1
+  - task: NuGetCommand@2
+    displayName: NuGet restore
+    inputs:
+      solution: $(BuildParameters.solution)
+      feedRestore: 398dc672-0fc0-47ad-b0ab-13ff507eff47
+      nugetConfigPath: .gitignore
+  - task: PowerShell@2
+    displayName: NPM Install
+    inputs:
+      targetType: 'inline'
+      script: 'npm install'
+      workingDirectory: '.\Source\NSerio.EmptyProject.WebApps'
+  - task: PowerShell@2
+    displayName: Build
+    inputs:
+      filePath: build.ps1
+      arguments: -version $(Major).$(Minor).$(Patch).$(Release)
+  - task: CopyFiles@2
+    displayName: Copy RAP
+    inputs:
+      SourceFolder: Delivery
+      Contents: '*.rap'
+      TargetFolder: $(build.artifactstagingdirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact:'
+    inputs:
+      PathtoPublish: $(build.artifactstagingdirectory)
+      ArtifactName: Delivery
+...
