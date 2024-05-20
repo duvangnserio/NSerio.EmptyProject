@@ -1,0 +1,76 @@
+// @import "~@fullcalendar/core/main.css";
+// @import "~@fullcalendar/daygrid/main.css";
+// @import "~@fullcalendar/timegrid/main.css";
+
+::ng-deep {
+  @function mixw($variable, $opacity) {
+    @return unquote(
+      "linear-gradient(to top,rgba(255, 255, 255," + $opacity +
+        "),rgba(255, 255, 255," + $opacity + ")) " + $variable
+    );
+  }
+
+  .fc-widget-header {
+    color: var(--v-primary-base) !important;
+    font-weight: normal !important;
+  }
+
+  .fc-other-month.fc-day-top {
+    opacity: 0.7 !important;
+  }
+
+  td.fc-other-month {
+    background: mixw(var(--v-secondary-lighten5), 0.9) !important;
+  }
+
+  td.fc-day-top.fc-today {
+    background: mixw(var(--v-secondary-lighten5), 0.5) !important;
+  }
+
+  td span.fc-day-number {
+    padding: 0 4px 0 0 !important;
+    font-size: 0.9em !important;
+  }
+
+  td.fc-other-month > .fc-day-number {
+    color: var(--v-secondary-lighten3) !important;
+  }
+
+  .fc-content .fc-time {
+    display: flex;
+    flex: 0 0 auto;
+    margin-right: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fc-content .fc-title {
+    display: inline-block !important;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fc-content {
+    display: flex;
+    flex: 1 1 auto;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .fc-time-grid-event .fc-title,
+  .fc-time-grid-event .fc-time {
+    font-size: 1em !important;
+  }
+
+  td.fc-axis {
+    font-size: 0.9em !important;
+  }
+
+  .fc-widget-content {
+    max-height: 300px;
+    overflow: auto;
+  }
+}

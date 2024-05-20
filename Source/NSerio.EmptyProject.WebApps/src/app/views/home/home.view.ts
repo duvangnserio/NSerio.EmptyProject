@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { HelloWorldComponent } from '@app/components/hello-world/hello-world.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {
@@ -27,12 +27,16 @@ import { EventImpl } from '@fullcalendar/core/internal';
   styleUrl: './home.view.scss',
 })
 export class HomeView {
-  calendarOptions: CalendarOptions = {
+  calendarOptions = signal<CalendarOptions> ({
     initialView: 'dayGridMonth', // aka defaultView in fullcalendar vue
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     selectable: true,
     weekends: true,
-    // headerToolbar: false,// header in Vue? don't know
+    headerToolbar: {
+      left: '',
+      center: '',
+      right: '',
+    },//empty properties to remove the default elements
     // datesRender: angular doesn't have this
     //eventLimit: angular doesn't have this
     events: [
@@ -72,7 +76,7 @@ export class HomeView {
     eventDrop: this.fullCalendarDragDropResize,
     eventResize: this.fullCalendarDragResize,
     // eventPositioned: angular doesn't have this,
-  };
+  });
 
   fullCalendarDragResize(arg: EventResizeDoneArg): void {
     console.log('fullCalendarDragResize', arg);
