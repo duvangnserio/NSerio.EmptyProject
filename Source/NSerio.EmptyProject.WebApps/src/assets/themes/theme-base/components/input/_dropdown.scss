@@ -49,6 +49,18 @@
     &.p-invalid.p-component {
         @include invalid-input();
     }
+
+    &.p-variant-filled {
+        background-color: $inputFilledBg;
+
+        &:enabled:hover {
+            background-color: $inputFilledHoverBg;
+        }
+
+        &:enabled:focus {
+            background-color: $inputFilledFocusBg;
+        }
+    }
 }
 
 .p-dropdown-panel {
@@ -70,7 +82,6 @@
         .p-dropdown-filter {
             padding-right: nth($inputPadding, 2) + $primeIconFontSize;
             margin-right: -1 * (nth($inputPadding, 2) + $primeIconFontSize);
-            border: $inputBorder;
         }
 
         .p-dropdown-filter-icon {
@@ -90,6 +101,10 @@
             background: $inputListItemBg;
             transition: $listItemTransition;
             border-radius: $inputListItemBorderRadius;
+
+            &:first-child {
+                margin-top: 0;
+            }
 
             &.p-highlight {
                 color: $highlightTextColor;
@@ -136,7 +151,7 @@
         &:not(.p-disabled):hover {
             background-color: $inputFilledHoverBg;
         }
-
+    
         &:not(.p-disabled).p-focus {
             background-color: $inputFilledFocusBg;
 
