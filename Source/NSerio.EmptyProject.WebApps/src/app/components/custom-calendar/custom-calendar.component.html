@@ -1,0 +1,9 @@
+<p-calendar
+  [(ngModel)]="innerValue"
+  (onSelect)="onDateChange($event)"
+  [showTime]="true"
+  hourFormat="24"
+  [disabled]="isDisabled"
+  dateFormat="dd/mm/yy"
+  timeOnly="false"
+></p-calendar>

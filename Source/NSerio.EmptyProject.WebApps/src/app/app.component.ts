@@ -16,4 +16,5 @@ import { SwitchLangComponent } from './components/switch-lang/switch-lang.compon
 })
 export class AppComponent {
   public title = 'Application Name';
+
 }

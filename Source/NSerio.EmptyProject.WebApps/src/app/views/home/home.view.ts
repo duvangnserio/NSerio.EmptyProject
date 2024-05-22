@@ -28,7 +28,7 @@ import { EventImpl } from '@fullcalendar/core/internal';
 })
 export class HomeView {
   calendarOptions = signal<CalendarOptions> ({
-    initialView: 'dayGridMonth', // aka defaultView in fullcalendar vue
+    initialView: 'timeGridWeek', // aka defaultView in fullcalendar vue
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     selectable: true,
     weekends: true,
