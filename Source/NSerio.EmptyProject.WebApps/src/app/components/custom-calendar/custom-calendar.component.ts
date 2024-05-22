@@ -3,6 +3,7 @@ import { Component, forwardRef  } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PrimeNGConfig } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
+import { StepperModule } from 'primeng/stepper';
 
 @Component({
   selector: 'app-custom-calendar',
@@ -10,7 +11,8 @@ import { CalendarModule } from 'primeng/calendar';
   imports: [
     CommonModule,
     CalendarModule,    
-    FormsModule
+    FormsModule,
+    StepperModule
   ],
   templateUrl: './custom-calendar.component.html',
   styleUrl: './custom-calendar.component.scss',
