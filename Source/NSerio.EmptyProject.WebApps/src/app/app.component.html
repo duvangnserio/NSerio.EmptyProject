@@ -1,19 +1,5 @@
-<p-toolbar
-  styleClass="bg-black-alpha-80 border-noround border-none shadow-4 text-white py-2"
->
-  <ng-template pTemplate="start">
-    <img
-      src="./assets/images/logo.png"
-      class="mr-2"
-      width="40"
-      alt="logo-image"
-    />
-    <span class="text-bold">{{ title }}</span>
-  </ng-template>
-  <ng-template pTemplate="end">
-    <app-switch-lang />
-  </ng-template>
-</p-toolbar>
-<div class="flex align-content-between flex-wrap justify-content-center w-screen">
-  <router-outlet />
+<div class="flex flex-wrap">
+  <div class="w-screen h-screen">
+    <router-outlet />
+  </div>
 </div>

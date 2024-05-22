@@ -1,4 +1,55 @@
-<div class="w-screen">
-  <full-calendar class="pl-8" [options]="calendarOptions()"></full-calendar>
+  <div class="grid">
+    <div class="col-3 flex align-items-center pa-0">
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        label="Today"
+        (onClick)="setToday()"
+      ></p-button>
+      <div class="align-content-center">
+        {{ title() }}
+      </div>
+    </div>
+    <div class="col-7 pa-0 flex gap-2 align-items-center">
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        label="Day"
+        (onClick)="changeView('timeGridDay')"
+      ></p-button>
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        label="Week"
+        (onClick)="changeView('timeGridWeek')"
+      ></p-button>
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        label="Month"
+        (onClick)="changeView('dayGridMonth')"
+      ></p-button>
 
-</div>
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        icon="pi pi-angle-left"
+        (onClick)="prev()"
+      ></p-button>
+      <p-button
+        rounded
+        raised
+        severity="primary"
+        icon="pi pi-angle-right"
+        (onClick)="next()"
+      ></p-button>
+    </div>
+  </div>
+  <div class="h-full">
+    <full-calendar #fullCalendar [options]="calendarOptions()"></full-calendar>
+  </div>

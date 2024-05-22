@@ -1,7 +1,3 @@
-// @import "~@fullcalendar/core/main.css";
-// @import "~@fullcalendar/daygrid/main.css";
-// @import "~@fullcalendar/timegrid/main.css";
-
 ::ng-deep {
   @function mixw($variable, $opacity) {
     @return unquote(
@@ -10,54 +6,12 @@
     );
   }
 
-  .fc-widget-header {
-    color: var(--v-primary-base) !important;
-    font-weight: normal !important;
+  td.fc-day-other {
+    background: mixw(var(--surface-400), 0.9) !important;
   }
 
-  .fc-other-month.fc-day-top {
-    opacity: 0.7 !important;
-  }
-
-  td.fc-other-month {
-    background: mixw(var(--v-secondary-lighten5), 0.9) !important;
-  }
-
-  td.fc-day-top.fc-today {
-    background: mixw(var(--v-secondary-lighten5), 0.5) !important;
-  }
-
-  td span.fc-day-number {
-    padding: 0 4px 0 0 !important;
-    font-size: 0.9em !important;
-  }
-
-  td.fc-other-month > .fc-day-number {
-    color: var(--v-secondary-lighten3) !important;
-  }
-
-  .fc-content .fc-time {
-    display: flex;
-    flex: 0 0 auto;
-    margin-right: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .fc-content .fc-title {
-    display: inline-block !important;
-    flex: 1 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .fc-content {
-    display: flex;
-    flex: 1 1 auto;
-    table-layout: fixed;
-    width: 100%;
+  td.fc-day-other .fc-daygrid-day-number {
+    color: var(--surface-500) !important;
   }
 
   .fc-time-grid-event .fc-title,
@@ -72,5 +26,93 @@
   .fc-widget-content {
     max-height: 300px;
     overflow: auto;
+  }
+
+  .fc-event {
+    background-color: var(--calendar-task-background-color);
+    border-radius: 4px !important;
+    border-left-width: 5px !important;
+    border: 1px solid;
+    border-color: var(--calendar-task-border);
+    box-sizing: border-box;
+    margin-bottom: 2px;
+    outline: none;
+    min-height: 18px !important;
+
+    .fc-event-title {
+      color: var(--calendar-task-text) !important;
+      display: inline-block !important;
+      flex: 1 1 auto;
+      font-weight: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .fc-event-time {
+      color: var(--calendar-task-text) !important;
+      display: flex;
+      font-weight: 700;
+      flex: 0 0 auto;
+      margin-right: 5px;
+      margin-top: 1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .fc-event-main-frame {
+      display: flex;
+      flex: 1 1 auto;
+      table-layout: fixed;
+      width: 100%;
+      flex-direction: row;
+    }
+  }
+
+  .fc-scrollgrid > thead {
+    margin-bottom: 0 !important;
+    position: relative;
+    border-bottom: 0;
+
+    .fc-scroller > table {
+      height: 44px !important;
+      box-sizing: border-box;
+
+      thead th {
+        border: 0;
+        border-bottom: 1px solid var(--fc-border-color);
+        color: rgba(0, 0, 0, 0.87) !important;
+        padding: 9px 0 !important;
+        font-weight: normal !important;
+      }
+    }
+  }
+
+  .fc-daygrid-day-number {
+    font-size: 1em !important;
+    color: #333;
+    background-color: transparent !important;
+    text-align: center;
+    min-width: 25px;
+    border-radius: 4px;
+    margin: 1px;
+    margin-right: 2px;
+  }
+
+  a.fc-daygrid-day-number:hover {
+    background: var(--calendar-background-hover-color) !important;
+    text-align: center !important;
+    text-decoration: none !important;
+  }
+
+  td.fc-day-today {
+    background: transparent !important;
+  }
+
+  td.fc-day-today .fc-daygrid-day-number {
+    background: #e4e4e4 !important;
+    border-radius: 5px;
+    font-weight: 500;
   }
 }

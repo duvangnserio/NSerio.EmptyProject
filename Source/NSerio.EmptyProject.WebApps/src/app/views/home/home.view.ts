@@ -1,6 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { HelloWorldComponent } from '@app/components/hello-world/hello-world.component';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import {
+  FullCalendarComponent,
+  FullCalendarModule,
+} from '@fullcalendar/angular';
 import {
   CalendarApi,
   CalendarOptions,
@@ -18,37 +21,55 @@ import interactionPlugin, {
   EventResizeDoneArg,
 } from '@fullcalendar/interaction';
 import { EventImpl } from '@fullcalendar/core/internal';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HelloWorldComponent, TranslateModule, FullCalendarModule],
+  imports: [
+    HelloWorldComponent,
+    TranslateModule,
+    FullCalendarModule,
+    ButtonModule,
+    SelectButtonModule,
+  ],
   templateUrl: './home.view.html',
   styleUrl: './home.view.scss',
 })
 export class HomeView {
-  calendarOptions = signal<CalendarOptions> ({
-    initialView: 'timeGridWeek', // aka defaultView in fullcalendar vue
+  view = signal<string>('dayGridMonth');
+  title = signal<string>('');
+
+  calendarOptions = signal<CalendarOptions>({
+    initialView: this.view(), // aka defaultView in fullcalendar vue
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     selectable: true,
+    height: '90%',
     weekends: true,
     headerToolbar: {
       left: '',
       center: '',
       right: '',
-    },//empty properties to remove the default elements
-    // datesRender: angular doesn't have this
+    }, //empty properties to remove the default elements
+    datesSet:(arg)=> {
+      console.log('datesSet', arg);
+      this.title.set(arg.view.title);
+    },// aka datesRender in fullcalendar vue
     //eventLimit: angular doesn't have this
     events: [
-      { title: 'event 1', date: '2024-05-17' },
-      { title: 'event 2', date: '2024-05-18' },
+      { title: 'event 1', date: '2024-05-17', allDay: true },
+      { title: 'event 2', start: '2024-05-03T14:33:00', end: '2024-05-03T15:33:00' },
     ],
     eventTimeFormat: {
       hour: '2-digit',
       minute: '2-digit',
       meridiem: 'short',
     },
-    // eventRender: angular doesn't have this
+    eventDidMount: (arg) => {
+      // arg.el.style.borderColor = 'red';
+      console.log('eventDidMount', arg);
+    }, //aka eventRender in fullcalendar vue
     fixedWeekCount: false,
     nowIndicator: true,
     editable: true,
@@ -62,12 +83,12 @@ export class HomeView {
     forceEventDuration: true,
     timeZone: 'local',
     // columnHeader: angular doesn't have this
-    // slotLabelFormat:{
-    //   hour: 'numeric',
-    //             minute: '2-digit',
-    //             omitZeroMinute: true,
-    //             meridiem: 'long',
-    // } // angular doesn't have this, the object doesn't match with fullcalendar vue
+    slotLabelFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      omitZeroMinute: true,
+      meridiem: true,
+    },
     eventDragStart: this.eventDragStart,
     eventResizeStart: this.eventDragStart,
     windowResize: this.setAspectRatio,
@@ -75,8 +96,18 @@ export class HomeView {
     select: this.fullCalendarSelect,
     eventDrop: this.fullCalendarDragDropResize,
     eventResize: this.fullCalendarDragResize,
+    eventDragStop(arg) {
+      console.log('eventDragStop', arg);
+    }, //could be used as event positioned in angular
     // eventPositioned: angular doesn't have this,
   });
+
+  fullCalendar = viewChild(FullCalendarComponent);
+  viewOptions = [
+    { label: 'Day', value: 'dayGridDay' },
+    { label: 'Week', value: 'timeGridWeek' },
+    { label: 'Month', value: 'dayGridMonth' },
+  ];
 
   fullCalendarDragResize(arg: EventResizeDoneArg): void {
     console.log('fullCalendarDragResize', arg);
@@ -113,4 +144,19 @@ export class HomeView {
   setAspectRatio(arg: { view: ViewApi }): void {
     console.log('setAspectRatio', arg);
   }
+
+  //#region FullCalendarComponent methods
+  changeView(view: string) {
+    this.fullCalendar()?.getApi().changeView(view);
+  }
+  next() {
+    this.fullCalendar()?.getApi().next();
+  }
+  prev() {
+    this.fullCalendar()?.getApi().prev();
+  }
+  setToday() {
+    this.fullCalendar()?.getApi().today();
+  }
+  //#endregion
 }
