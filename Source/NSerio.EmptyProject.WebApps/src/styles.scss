@@ -8,3 +8,11 @@ body {
   padding: 0px;
   overflow: auto;
 }
+
+:root{
+  --calendar-task-background-color: #fff;
+  --calendar-task-text: #4c4c4c;
+  --calendar-task-border: #bebebe;
+  --calendar-background-hover-color: #f2f2f2;
+  --calendar-eventfc-color: #e2e2e2;
+}
