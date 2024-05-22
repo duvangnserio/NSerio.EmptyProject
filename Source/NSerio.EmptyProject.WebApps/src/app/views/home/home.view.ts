@@ -1,4 +1,9 @@
-import { Component, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { HelloWorldComponent } from '@app/components/hello-world/hello-world.component';
 import {
   FullCalendarComponent,
@@ -52,14 +57,18 @@ export class HomeView {
       center: '',
       right: '',
     }, //empty properties to remove the default elements
-    datesSet:(arg)=> {
+    datesSet: (arg) => {
       console.log('datesSet', arg);
       this.title.set(arg.view.title);
-    },// aka datesRender in fullcalendar vue
+    }, // aka datesRender in fullcalendar vue
     //eventLimit: angular doesn't have this
     events: [
       { title: 'event 1', date: '2024-05-17', allDay: true },
-      { title: 'event 2', start: '2024-05-03T14:33:00', end: '2024-05-03T15:33:00' },
+      {
+        title: 'event 2',
+        start: '2024-05-03T14:33:00',
+        end: '2024-05-03T15:33:00',
+      },
     ],
     eventTimeFormat: {
       hour: '2-digit',
@@ -109,6 +118,10 @@ export class HomeView {
     { label: 'Month', value: 'dayGridMonth' },
   ];
 
+  private readonly dayGridMonthView = 'dayGridMonth';
+  private readonly timeGridDayView = 'timeGridDay';
+  private readonly timeGridWeekView = 'timeGridWeek';
+
   fullCalendarDragResize(arg: EventResizeDoneArg): void {
     console.log('fullCalendarDragResize', arg);
   }
@@ -146,15 +159,38 @@ export class HomeView {
   }
 
   //#region FullCalendarComponent methods
+
+  @HostListener('document:keydown.shift.d')
+  setViewToDay() {
+    this.changeView(this.timeGridDayView);
+  }
+
+  @HostListener('document:keydown.shift.w')
+  setViewToWeek() {
+    this.changeView(this.timeGridWeekView);
+  }
+
+  @HostListener('document:keydown.shift.m')
+  setViewToMonth() {
+    this.changeView(this.dayGridMonthView);
+  }
+
   changeView(view: string) {
+    this.view.set(view);
     this.fullCalendar()?.getApi().changeView(view);
   }
+
+  @HostListener('document:keydown.shift.arrowright')
   next() {
     this.fullCalendar()?.getApi().next();
   }
+
+  @HostListener('document:keydown.shift.arrowleft')
   prev() {
     this.fullCalendar()?.getApi().prev();
   }
+
+  @HostListener('document:keydown.shift.t')
   setToday() {
     this.fullCalendar()?.getApi().today();
   }
