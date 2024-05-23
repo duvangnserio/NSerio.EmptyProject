@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 import { TranslateHttpLoaderFactory } from './factories/translate-http-loader.factory';
 import { httpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { httpRequestInterceptor } from './interceptors/http-request.interceptor';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,5 +31,6 @@ export const appConfig: ApplicationConfig = {
         },
       }),
     ),
+   // MessageService, provideAnimationsAsync()
   ],
 };

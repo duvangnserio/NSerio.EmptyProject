@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, forwardRef  } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { StepperModule } from 'primeng/stepper';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-custom-calendar',
@@ -12,11 +13,12 @@ import { StepperModule } from 'primeng/stepper';
     CommonModule,
     CalendarModule,    
     FormsModule,
-    StepperModule
+    StepperModule,
+    ConfirmDialogModule
   ],
   templateUrl: './custom-calendar.component.html',
   styleUrl: './custom-calendar.component.scss',
-  providers: [
+  providers: [ConfirmationService,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CustomCalendarComponent),
@@ -29,7 +31,7 @@ export class CustomCalendarComponent implements ControlValueAccessor {
   private onChange: any = (_: any) => {};
   private onTouched: any = () => {};
 
-  constructor(private primengConfig: PrimeNGConfig) {
+  constructor(private primengConfig: PrimeNGConfig, private confirmationService: ConfirmationService) {
     this.primengConfig.ripple = true;
   }
 
@@ -61,5 +63,20 @@ export class CustomCalendarComponent implements ControlValueAccessor {
     this.onTouched();
    
     console.log('Selected Date:', value);
+  }
+
+ 
+  confirm() {
+    this.confirmationService.confirm({
+      message: '¿Estás seguro de que deseas proceder?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {        
+        console.log('Confirmado');
+      },
+      reject: () => {
+        console.log('Rechazado');
+      }
+    });
   }
 }
