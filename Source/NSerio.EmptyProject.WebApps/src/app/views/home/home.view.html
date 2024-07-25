@@ -1,55 +1,16 @@
-<div class="grid">
-  <div class="col-3 flex align-items-center pa-0">
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      label="Today"
-      (onClick)="setToday()"
-    ></p-button>
-    <div class="align-content-center">
-      {{ title() }}
-    </div>
-  </div>
-  <div class="col-7 pa-0 flex gap-2 align-items-center">
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      label="Day"
-      (onClick)="setViewToDay()"
-    ></p-button>
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      label="Week"
-      (onClick)="setViewToWeek()"
-    ></p-button>
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      label="Month"
-      (onClick)="setViewToMonth()"
-    ></p-button>
-
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      icon="pi pi-angle-left"
-      (onClick)="prev()"
-    ></p-button>
-    <p-button
-      rounded
-      raised
-      severity="primary"
-      icon="pi pi-angle-right"
-      (onClick)="next()"
-    ></p-button>
-  </div>
-</div>
+<app-calendar-toolbar
+  [title]="title()"
+  [(onNext)]="next"
+  [(onPrev)]="prev"
+  [(onToday)]="setToday"
+  [(view)]="view"
+></app-calendar-toolbar>
 <div class="h-full">
-  <full-calendar #fullCalendar [options]="calendarOptions()"></full-calendar>
+  <app-calendar
+    [(title)]="title"
+    [(view)]="view"
+    [next]="next()"
+    [prev]="prev()"
+    [today]="setToday()"
+  ></app-calendar>
 </div>
