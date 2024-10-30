@@ -86,6 +86,12 @@
       <Name>Relativity.Shared.dll</Name>
       <Notes />
     </Assembly>
+    <Assembly>
+      <ArtifactId>7439727</ArtifactId>
+      <Keywords />
+      <Name>Relativity.Processing.Services.Interfaces.dll</Name>
+      <Notes />
+    </Assembly>
   </Assemblies>
   <ResourceFiles />
   <ExternalTabs />

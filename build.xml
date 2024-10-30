@@ -55,6 +55,7 @@
           <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\NSerio.EmptyProject.Core.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.EventHandlers\bin\x64\Release\NSerio.EmptyProject.EventHandlers.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\NSerio.EmptyProject.Agents.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\Relativity.Processing.Services.Interfaces.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\NSerio.EmptyProject.Kepler.Services.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Kepler.Services.Interfaces\bin\x64\Release\NSerio.EmptyProject.Kepler.Services.Interfaces.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\WorkloadDiscovery.dll</Assembly>
