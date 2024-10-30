@@ -1,12 +1,16 @@
 using kCura.Agent.CustomAttributes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using NSerio.Utils;
 using NSerio.Utils.Relativity;
 using Relativity.API;
 using Relativity.Processing.V1.Services;
 using Relativity.Processing.V1.Services.Interfaces.DTOs;
+using Relativity.Services.Search;
+using Relativity.Services.View;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using WorkloadDiscovery.CustomAttributes;
 
@@ -30,33 +34,196 @@ namespace NSerio.EmptyProject.Agents
 				StartingPointOfResult = 0,
 			};
 			using var proxy = Helper.GetServicesManager().CreateProxy<IProcessingFilterManager>(ExecutionIdentity.CurrentUser);
-			ProcessingFilterData response = await proxy.GetDiscoveredDocumentsAsync(workspaceId, request);
+			//ProcessingFilterData response = await proxy.GetDiscoveredDocumentsAsync(workspaceId, request);
 
-			string fieldName = nameof(ProcessingFilterResult.FileExtension);
+			//string fieldName = nameof(ProcessingFilterResult.FileExtension);
 
-			var results = response.Results;
+			//var results = response.Results;
 
-			// Pivot data taking into account the field name using reflection
+			//// Pivot data taking into account the field name using reflection
 
-			var pivotData = results
-				.GroupBy(x => x.GetType().GetProperty(fieldName).GetValue(x))
-				.Select(x => new
-				{
-					x.Key,
-					Count = x.Count()
-				})
-				.ToList();
+			//var pivotData = results
+			//	.GroupBy(x => x.GetType().GetProperty(fieldName).GetValue(x))
+			//	.Select(x => new
+			//	{
+			//		x.Key,
+			//		Count = x.Count()
+			//	})
+			//	.ToList();
 
-			StringBuilder messages = new StringBuilder();
-			foreach (var x1 in pivotData)
+			//StringBuilder messages = new StringBuilder();
+			//foreach (var x1 in pivotData)
+			//{
+			//	messages.AppendLine($"Key: {x1.Key}, Count: {x1.Count}");
+			//	RaiseMessageBase(messages.ToString());
+			//}
+
+			//var exception = new Exception(messages.ToString());
+
+			//await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(TestAgent));
+
+			await PivotDiscoveredDocumentsAsync(proxy, workspaceId);
+		}
+
+		private async Task PivotDiscoveredDocumentsAsync(IProcessingFilterManager proxy, int workspaceId)
+		{
+			int viewId = 1041895;
+			using var viewManager = Helper.GetServicesManager().CreateProxy<IViewManager>(ExecutionIdentity.CurrentUser);
+			var view = await viewManager.ReadSingleAsync(workspaceId, viewId);
+
+			if (view != null)
 			{
-				messages.AppendLine($"Key: {x1.Key}, Count: {x1.Count}");
-				RaiseMessageBase(messages.ToString());
+				IProcessingFilterExpressionModel expression = ConvertCriteriaToProcessingFilter(view.SearchCriteria);
+
+				string expressionJson = JsonConvert.SerializeObject(expression, new StringEnumConverter());
+				var exception = new Exception(expressionJson);
+				await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(PivotDiscoveredDocumentsAsync));
+
+				var request = new GetDiscoveredDocumentsWithPivotOnRequest()
+				{
+					Expression = expressionJson,
+					PivotOnOption = new PivotOnOption()
+					{
+						GroupByProperty = Property.FileExtension,
+					}
+				};
+				var result = await proxy.PivotOnDiscoveredDocumentsAsync(workspaceId, request);
+
+				var resultAsJson = result.ToJSON();
+
+				exception = new Exception(resultAsJson);
+				await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(PivotDiscoveredDocumentsAsync));
+				RaiseMessageBase(resultAsJson);
 			}
 
-			var exception = new Exception(messages.ToString());
+		}
 
-			await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(TestAgent));
+		private IProcessingFilterExpressionModel? MapCriteriaToFilter(Criteria criteria)
+		{
+			var property = GetProperty(criteria.Condition.FieldIdentifier.Name);
+			ProcessingFilterConditionalExpression filterExpression = null;
+			if (property != null)
+			{
+				if (!(criteria.Condition is CriteriaCondition criteriaCondition))
+				{
+					throw new ArgumentException("Unknown criteria type", nameof(criteria));
+				}
+
+				filterExpression = new ProcessingFilterConditionalExpression
+				{
+					Property = property.Value,
+					Constraint = GetConstraint(criteriaCondition.Operator),
+					Value = criteriaCondition.Value?.ToString() // Convert value to string if necessary
+				};
+			}
+
+			return filterExpression;
+		}
+
+		private ProcessingFilterCompositeExpression MapCriteriaCollectionToComposite(CriteriaCollection criteriaCollection)
+		{
+			var compositeExpression = new ProcessingFilterCompositeExpression
+			{
+				Operator = criteriaCollection.BooleanOperator == BooleanOperatorEnum.And
+					? ProcessingFilterOperator.And
+					: ProcessingFilterOperator.Or,
+				Expressions = criteriaCollection.Conditions
+					.Select(c => c is Criteria criteria
+						? MapCriteriaToFilter(criteria)
+						: MapCriteriaCollectionToComposite((CriteriaCollection)c)) // Recursive for nested collections
+					.Where(t => t != null)
+					.ToArray()
+			};
+
+			return compositeExpression;
+		}
+
+		public IProcessingFilterExpressionModel ConvertCriteriaToProcessingFilter(CriteriaBase criteriaBase)
+		{
+			if (criteriaBase is CriteriaCollection criteriaCollection)
+			{
+				return MapCriteriaCollectionToComposite(criteriaCollection);
+			}
+			else if (criteriaBase is Criteria criteria)
+			{
+				return MapCriteriaToFilter(criteria);
+			}
+
+			throw new ArgumentException("Unknown criteria type", nameof(criteriaBase));
+		}
+
+
+		public Property? GetProperty(string name)
+		{
+			return name switch
+			{
+				"Container ID" => Property.ContainerID,
+				"Container Name" => Property.ContainerName,
+				"Custodian" => Property.CustodianArtifactId,
+				"File Extension - Text" => Property.FileExtension,
+				"Container Extension" => Property.ContainerExtension,
+				"Data Source" => Property.DataSourceArtifactId,
+				"Dedupe Status" => Property.DedupeStatus,
+				"Discovery Group ID" => Property.DiscoverGroupId,
+				"Exception Category" => Property.ErrorCategory,
+				"Exception Message" => Property.ErrorMessage,
+				"Exception Phase" => Property.ErrorPhase,
+				"Exception Status" => Property.ErrorStatus,
+				"Extracted Text Location" => Property.ExtractedTextLocation,
+				"File ID" => Property.ProcessingFileId,
+				"File Name" => Property.FileName,
+				"File Size (KB)" => Property.FileSize,
+				"File Type" => Property.FileType,
+				"Folder Path" => Property.FolderPath,
+				"Import Source" => Property.ImportSource,
+				"Is Container?" => Property.IsContainer,
+				"Is Embedded?" => Property.IsEmbedded,
+				"Is Published?" => Property.IsPublished,
+				"Logical Path" => Property.LogicalPath,
+				"MD5 Hash" => Property.MD5Hash,
+				"Original Path" => Property.OriginalPath,
+				"Parent File ID" => Property.ParentDocumentId,
+				"Processing Deletion?" => Property.IsDeleted,
+				"Sender Domain - Text" => Property.SenderDomain,
+				"SHA-256 Hash" => Property.SHA256Hash,
+				"SHA1 Hash" => Property.SHA1Hash,
+				"Sort Date" => Property.SortDate,
+				"Storage ID" => Property.StorageId,
+				"Text Extraction Method" => Property.TextExtractionMethod,
+				"Unprocessable" => Property.Unprocessable,
+				"Virtual Path - Text" => Property.VirtualPath,
+				_ => null
+			};
+		}
+
+
+		private ProcessingFilterConstraint GetConstraint(CriteriaConditionEnum criteriaConditionOperator)
+		{
+			return criteriaConditionOperator switch
+			{
+				//case CriteriaConditionEnum.AllOfThese Not Mapped since is not available in condition builder of view In Relativity
+				CriteriaConditionEnum.AnyOfThese => ProcessingFilterConstraint.IsIn,
+				CriteriaConditionEnum.IsLike => ProcessingFilterConstraint.IsLike,
+				//case CriteriaConditionEnum.Contains: Does not appear in Condition builder
+				CriteriaConditionEnum.EndsWith => ProcessingFilterConstraint.EndsWith,
+				CriteriaConditionEnum.GreaterThan => ProcessingFilterConstraint.IsGreaterThan,
+				CriteriaConditionEnum.GreaterThanOrEqualTo => ProcessingFilterConstraint.IsGreaterThanOrEqualTo,
+				CriteriaConditionEnum.In =>
+					ProcessingFilterConstraint
+						.Between // Not sure about this mapping, the view returns for example ThisMonth, but the processing filter is with between with an array
+				,
+				CriteriaConditionEnum.Is => ProcessingFilterConstraint.Is,
+				CriteriaConditionEnum.IsSet => ProcessingFilterConstraint.IsSet,
+				CriteriaConditionEnum.LessThan => ProcessingFilterConstraint.IsLessThan,
+				CriteriaConditionEnum.LessThanOrEqualTo => ProcessingFilterConstraint.IsLessThanOrEqualTo,
+				CriteriaConditionEnum.StartsWith => ProcessingFilterConstraint.BeginsWith,
+				//CriteriaConditionEnum.Unknown => expr,
+				//CriteriaConditionEnum.AllOfThese => expr,
+				//CriteriaConditionEnum.Contains => expr,
+				//CriteriaConditionEnum.IsLoggedInUser => expr,
+				//CriteriaConditionEnum.LuceneSearch => expr,
+				_ => throw new ArgumentOutOfRangeException(nameof(criteriaConditionOperator), criteriaConditionOperator, null)
+			};
 		}
 	}
 }
