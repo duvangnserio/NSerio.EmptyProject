@@ -67,7 +67,7 @@ namespace NSerio.EmptyProject.Agents
 
 		private async Task PivotDiscoveredDocumentsAsync(IProcessingFilterManager proxy, int workspaceId)
 		{
-			int viewId = 1041895;
+			int viewId = 1050017;
 			using var viewManager = Helper.GetServicesManager().CreateProxy<IViewManager>(ExecutionIdentity.CurrentUser);
 			var view = await viewManager.ReadSingleAsync(workspaceId, viewId);
 
@@ -102,22 +102,135 @@ namespace NSerio.EmptyProject.Agents
 		{
 			var property = GetProperty(criteria.Condition.FieldIdentifier.Name);
 			ProcessingFilterConditionalExpression filterExpression = null;
+
 			if (property != null)
 			{
-				if (!(criteria.Condition is CriteriaCondition criteriaCondition))
+				switch (criteria.Condition)
 				{
-					throw new ArgumentException("Unknown criteria type", nameof(criteria));
-				}
+					case CriteriaCondition criteriaCondition:
+						ProcessingFilterConstraint filterConstraint = GetConstraint(criteriaCondition.Operator);
+						filterExpression = new ProcessingFilterConditionalExpression
+						{
+							Property = property.Value,
+							Constraint = criteriaCondition.NotOperator ? GetNegateConstraint(filterConstraint) : filterConstraint,
+							Value = criteriaCondition.Value?.ToString() // Convert value to string if necessary
+						};
+						break;
 
-				filterExpression = new ProcessingFilterConditionalExpression
-				{
-					Property = property.Value,
-					Constraint = GetConstraint(criteriaCondition.Operator),
-					Value = criteriaCondition.Value?.ToString() // Convert value to string if necessary
-				};
+					case CriteriaDateCondition criteriaDateCondition:
+						ProcessingFilterConstraint processingFilterConstraint = GetDateConstraint(criteriaDateCondition.Operator);
+						filterExpression = new ProcessingFilterConditionalExpression
+						{
+							Property = property.Value,
+							Constraint = criteriaDateCondition.NotOperator ? GetNegateConstraint(processingFilterConstraint) : processingFilterConstraint,
+							Value = GetDateValue(criteriaDateCondition)
+						};
+						break;
+
+					default:
+						throw new ArgumentException("Unknown criteria type", nameof(criteria));
+				}
 			}
 
 			return filterExpression;
+		}
+
+		private string GetDateValue(CriteriaDateCondition criteriaDateCondition)
+		{
+			string value = string.Empty;
+			if (criteriaDateCondition.Month != Month.NotSet)
+			{
+				value = new[] { criteriaDateCondition.Month.ToString() }.ToJSON(indented: false, useCamelCase: false);
+			}
+			else
+			{
+				if (criteriaDateCondition.Value.ToString() == "ThisMonth")
+				{
+					//An array of two dates where the first datetime is the start in hours and minutes zero of the month and the second datetime is the end of the month
+					DateTime startOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+					DateTime endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+					value = new[] { startOfMonth.ToString("yyyy-MM-ddTHH:mm:ss"), endOfMonth.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+
+				}
+				else if (criteriaDateCondition.Value.ToString() == "ThisWeek")
+				{
+					// An array of two dates where the first date is the start of the week with time zero and the second date is the end of the week
+					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek);
+					DateTime endOfWeek = startOfWeek.AddDays(6);
+					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+				}
+				else if (criteriaDateCondition.Value.ToString() == "LastWeek")
+				{
+					// An array of two dates where the first date is the start of the week and the second date is the end of the week
+					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek - 7);
+					DateTime endOfWeek = startOfWeek.AddDays(6);
+
+					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+				}
+				else if (criteriaDateCondition.Value.ToString() == "NextWeek")
+				{
+					// An array of two dates where the first date is the start of the week and the second date is the end of the week
+					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek + 7);
+					DateTime endOfWeek = startOfWeek.AddDays(6);
+
+					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+				}
+				else if (criteriaDateCondition.Value.ToString() == "Last7Days")
+				{
+					// An array of two dates where the first date is the start of the week and the second date is the end of the week with time
+					DateTime startOfWeek = DateTime.Today.AddDays(-7);
+					DateTime endOfWeek = DateTime.Today;
+
+					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+				}
+				else if (criteriaDateCondition.Value.ToString() == "Last30Days")
+				{
+					// An array of two dates where the first date is the start of the week and the second date is the end of the week
+					DateTime startOfWeek = DateTime.Today.AddDays(-30);
+					DateTime endOfWeek = DateTime.Today;
+
+					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+				}
+				else
+				{
+					value = new[] { criteriaDateCondition.Value.ToString() }.ToJSON(indented: false, useCamelCase: false);
+				}
+			}
+
+			return value;
+		}
+
+		private ProcessingFilterConstraint GetNegateConstraint(ProcessingFilterConstraint constraint)
+		{
+			return constraint switch
+			{
+				ProcessingFilterConstraint.Is => ProcessingFilterConstraint.IsNot,
+				ProcessingFilterConstraint.IsIn => ProcessingFilterConstraint.IsNotIn,
+				ProcessingFilterConstraint.IsSet => ProcessingFilterConstraint.IsNotSet,
+				ProcessingFilterConstraint.IsLike => ProcessingFilterConstraint.IsNotLike,
+				ProcessingFilterConstraint.BeginsWith => ProcessingFilterConstraint.DoesNotBeginWith,
+				ProcessingFilterConstraint.EndsWith => ProcessingFilterConstraint.DoesNotEndWith,
+				ProcessingFilterConstraint.Between => ProcessingFilterConstraint.NotBetween,
+				_ => throw new ArgumentOutOfRangeException(nameof(constraint), constraint, null)
+			};
+		}
+
+		// Helper method to map CriteriaDateConditionEnum to ProcessingFilterConstraintEnum or any relevant constraint enum
+		private ProcessingFilterConstraint GetDateConstraint(CriteriaDateConditionEnum dateOperator)
+		{
+			return dateOperator switch
+			{
+				CriteriaDateConditionEnum.Between => ProcessingFilterConstraint.Between,
+				CriteriaDateConditionEnum.In => ProcessingFilterConstraint.IsIn,
+				CriteriaDateConditionEnum.Is => ProcessingFilterConstraint.Is,
+				CriteriaDateConditionEnum.IsAfter => ProcessingFilterConstraint.IsAfter,
+				CriteriaDateConditionEnum.IsAfterOrOn => ProcessingFilterConstraint.IsAfterOrOn,
+				CriteriaDateConditionEnum.IsBefore => ProcessingFilterConstraint.IsBefore,
+				CriteriaDateConditionEnum.IsBeforeOrOn => ProcessingFilterConstraint.IsBeforeOrOn,
+				CriteriaDateConditionEnum.IsSet => ProcessingFilterConstraint.IsSet,
+				_ => throw new ArgumentOutOfRangeException(nameof(dateOperator), $"Unknown operator: {dateOperator}")
+			};
 		}
 
 		private ProcessingFilterCompositeExpression MapCriteriaCollectionToComposite(CriteriaCollection criteriaCollection)
