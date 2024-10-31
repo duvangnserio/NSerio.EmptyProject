@@ -113,7 +113,7 @@ namespace NSerio.EmptyProject.Agents
 						{
 							Property = property.Value,
 							Constraint = criteriaCondition.NotOperator ? GetNegateConstraint(filterConstraint) : filterConstraint,
-							Value = criteriaCondition.Value?.ToString() // Convert value to string if necessary
+							Value = criteriaCondition.Value?.ToJSON()
 						};
 						break;
 
@@ -222,7 +222,7 @@ namespace NSerio.EmptyProject.Agents
 			return dateOperator switch
 			{
 				CriteriaDateConditionEnum.Between => ProcessingFilterConstraint.Between,
-				CriteriaDateConditionEnum.In => ProcessingFilterConstraint.IsIn,
+				CriteriaDateConditionEnum.In => ProcessingFilterConstraint.Between,
 				CriteriaDateConditionEnum.Is => ProcessingFilterConstraint.Is,
 				CriteriaDateConditionEnum.IsAfter => ProcessingFilterConstraint.IsAfter,
 				CriteriaDateConditionEnum.IsAfterOrOn => ProcessingFilterConstraint.IsAfterOrOn,
@@ -237,7 +237,7 @@ namespace NSerio.EmptyProject.Agents
 		{
 			var compositeExpression = new ProcessingFilterCompositeExpression
 			{
-				Operator = criteriaCollection.BooleanOperator == BooleanOperatorEnum.And
+				Operator = criteriaCollection.BooleanOperator == BooleanOperatorEnum.And || criteriaCollection.BooleanOperator == BooleanOperatorEnum.None
 					? ProcessingFilterOperator.And
 					: ProcessingFilterOperator.Or,
 				Expressions = criteriaCollection.Conditions
