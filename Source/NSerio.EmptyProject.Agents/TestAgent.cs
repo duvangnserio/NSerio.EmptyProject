@@ -22,6 +22,7 @@ namespace NSerio.EmptyProject.Agents
 	public class TestAgent : AgentBase
 	{
 		private const string _WORKLOAD_ENPOINT = "Relativity.REST/api/NSerioEmptyProject/workload-agent/4ba10ea2-f92d-453b-a2f3-e52be2d2ca98/get-workload";
+		private const string _FULL_FORMAT_DATE = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
 
 		protected override async Task ExecuteAsync()
@@ -146,51 +147,45 @@ namespace NSerio.EmptyProject.Agents
 			{
 				if (criteriaDateCondition.Value.ToString() == "ThisMonth")
 				{
-					//An array of two dates where the first datetime is the start in hours and minutes zero of the month and the second datetime is the end of the month
-					DateTime startOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-					DateTime endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+					//An array of two dates where the first datetime is the start in hours and minutes zero of the month and the second datetime is the end of the month in the end of the day
+					(DateTime startOfMonth, DateTime endOfMonth) = GetThisMonthRange();
 
-					value = new[] { startOfMonth.ToString("yyyy-MM-ddTHH:mm:ss"), endOfMonth.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
-
+					value = new[] { startOfMonth.ToString(_FULL_FORMAT_DATE), endOfMonth.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else if (criteriaDateCondition.Value.ToString() == "ThisWeek")
 				{
 					// An array of two dates where the first date is the start of the week with time zero and the second date is the end of the week
-					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek);
-					DateTime endOfWeek = startOfWeek.AddDays(6);
-					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+
+					(DateTime startOfWeek, DateTime endOfWeek) = GetCurrentWeekRange();
+					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else if (criteriaDateCondition.Value.ToString() == "LastWeek")
 				{
 					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek - 7);
-					DateTime endOfWeek = startOfWeek.AddDays(6);
+					(DateTime startOfWeek, DateTime endOfWeek) = GetLastWeekRange();
 
-					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else if (criteriaDateCondition.Value.ToString() == "NextWeek")
 				{
 					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek + 7);
-					DateTime endOfWeek = startOfWeek.AddDays(6);
+					(DateTime startOfWeek, DateTime endOfWeek) = GetNextWeekRange();
 
-					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else if (criteriaDateCondition.Value.ToString() == "Last7Days")
 				{
 					// An array of two dates where the first date is the start of the week and the second date is the end of the week with time
-					DateTime startOfWeek = DateTime.Today.AddDays(-7);
-					DateTime endOfWeek = DateTime.Today;
+					(DateTime startOfWeek, DateTime endOfWeek) = GetLast7DaysRange();
 
-					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else if (criteriaDateCondition.Value.ToString() == "Last30Days")
 				{
 					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					DateTime startOfWeek = DateTime.Today.AddDays(-30);
-					DateTime endOfWeek = DateTime.Today;
+					(DateTime startOfWeek, DateTime endOfWeek) = GetLast30DaysRange();
 
-					value = new[] { startOfWeek.ToString("yyyy-MM-ddTHH:mm:ss"), endOfWeek.ToString("yyyy-MM-ddTHH:mm:ss") }.ToJSON(indented: false, useCamelCase: false);
+					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
 				}
 				else
 				{
@@ -199,6 +194,85 @@ namespace NSerio.EmptyProject.Agents
 			}
 
 			return value;
+		}
+
+		private const int DaysInAWeek = 7;
+		private const int DaysInLast30Days = 30;
+		private const int LastMomentHour = 23;
+		private const int LastMomentMinute = 59;
+		private const int LastMomentSecond = 59;
+		private const int LastMomentMillisecond = 999;
+
+		private static DateTime EndOfDay(DateTime date) =>
+			date.Date.AddHours(LastMomentHour)
+					 .AddMinutes(LastMomentMinute)
+					 .AddSeconds(LastMomentSecond)
+					 .AddMilliseconds(LastMomentMillisecond);
+
+		private static DateTime StartOfCurrentWeek()
+		{
+			DateTime today = DateTime.Today;
+			int daysSinceMonday = today.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)today.DayOfWeek - 1;
+			return today.AddDays(-daysSinceMonday).Date;
+		}
+
+		public static (DateTime start, DateTime end) GetThisMonthRange()
+		{
+			DateTime today = DateTime.Today;
+			DateTime start = new DateTime(today.Year, today.Month, 1);
+			DateTime end = EndOfDay(start.AddMonths(1).AddDays(-1));
+			return (start, end);
+		}
+
+		public static (DateTime start, DateTime end) GetLastWeekRange()
+		{
+			DateTime startOfCurrentWeek = StartOfCurrentWeek();
+			DateTime start = startOfCurrentWeek.AddDays(-DaysInAWeek);
+			DateTime end = EndOfDay(start.AddDays(DaysInAWeek - 1));
+			return (start, end);
+		}
+
+		public static (DateTime start, DateTime end) GetNextWeekRange()
+		{
+			DateTime startOfCurrentWeek = StartOfCurrentWeek();
+			DateTime start = startOfCurrentWeek.AddDays(DaysInAWeek);
+			DateTime end = EndOfDay(start.AddDays(DaysInAWeek - 1));
+			return (start, end);
+		}
+
+		public static (DateTime start, DateTime end) GetLast7DaysRange()
+		{
+			DateTime today = DateTime.Today;
+			DateTime start = today.AddDays(-DaysInAWeek);
+			DateTime end = EndOfDay(today);
+			return (start, end);
+		}
+
+		public static (DateTime start, DateTime end) GetLast30DaysRange()
+		{
+			DateTime today = DateTime.Today;
+			DateTime start = today.AddDays(-DaysInLast30Days);
+			DateTime end = EndOfDay(today);
+			return (start, end);
+		}
+
+		public static (DateTime startOfWeek, DateTime endOfWeek) GetCurrentWeekRange()
+		{
+			// Get the current date
+			DateTime today = DateTime.Today;
+
+			// Calculate the beginning of the week (Monday)
+			int daysSinceMonday = today.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)today.DayOfWeek - 1;
+			DateTime startOfWeek = today.AddDays(-daysSinceMonday);
+
+			// Calculate the end of the week (Sunday)
+			DateTime endOfWeek = startOfWeek.AddDays(6).Date
+				.AddHours(23)
+				.AddMinutes(59)
+				.AddSeconds(59)
+				.AddMilliseconds(999);
+
+			return (startOfWeek, endOfWeek);
 		}
 
 		private ProcessingFilterConstraint GetNegateConstraint(ProcessingFilterConstraint constraint)
