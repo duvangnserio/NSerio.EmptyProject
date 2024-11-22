@@ -1,3 +1,4 @@
+using NSerio.EmptyProject.Core.Helpers;
 using NSerio.Utils;
 using NSerio.Utils.Relativity;
 using Relativity.API;
@@ -46,7 +47,7 @@ namespace NSerio.EmptyProject.Agents
 			}
 			catch (Exception exception)
 			{
-				Helper.AddToRelativityErrorTab(Core.Constants.APP_ADMIN_CASE_ID, exception, Name);
+				Helper.AddToRelativityErrorTab(Core.Constants.APP_ADMIN_CASE_ID, exception, Name.GetErrorSource());
 				string errorMessage = $"ERROR: {exception.Message}";
 				RaiseError(errorMessage, exception.ToString());
 			}

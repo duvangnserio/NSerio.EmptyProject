@@ -92,6 +92,24 @@
       <Name>Relativity.Processing.Services.Interfaces.dll</Name>
       <Notes />
     </Assembly>
+    <Assembly>
+      <ArtifactId>7439728</ArtifactId>
+      <Keywords />
+      <Name>System.Text.Json.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439729</ArtifactId>
+      <Keywords />
+      <Name>System.Net.Http.Json.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439730</ArtifactId>
+      <Keywords />
+      <Name>System.Threading.Tasks.Extensions.dll</Name>
+      <Notes />
+    </Assembly>
   </Assemblies>
   <ResourceFiles />
   <ExternalTabs />
@@ -108,7 +126,22 @@
   <MasterScripts />
   <ApplicationScripts />
   <CustomPages />
-  <AgentTypes />
+  <AgentTypes>
+    <AgentType>
+      <ArtifactId>1019535</ArtifactId>
+      <Guid>54387B4A-0508-48CB-957E-9EC1B9FCB88F</Guid>
+      <AgentTypeName>Api Call Render Test Agent</AgentTypeName>
+      <FullNameSpace>NSerio.EmptyProject.Agents.ApiCallRenderTestAgent</FullNameSpace>
+      <DefaultInterval>60</DefaultInterval>
+      <DefaultLogging>10</DefaultLogging>
+      <MinInstanceEnvironment>0</MinInstanceEnvironment>
+      <MaxInstanceEnvironment>0</MaxInstanceEnvironment>
+      <MinInstanceServer>0</MinInstanceServer>
+      <MaxInstanceServer>0</MaxInstanceServer>
+      <MinInstanceResourcePool>0</MinInstanceResourcePool>
+      <MaxInstanceResourcePool>0</MaxInstanceResourcePool>
+    </AgentType>
+  </AgentTypes>
   <IsRelativityApplication>true</IsRelativityApplication>
   <InstallEventHandlers>
     <InstallEventHandler>

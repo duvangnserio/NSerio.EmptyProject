@@ -67,6 +67,14 @@
           <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Newtonsoft.Json.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Relativity.Environment.dll</Assembly>
           <Assembly>Source\NSerio.EmptyProject.Core\bin\x64\Release\Relativity.Shared.dll</Assembly>
+
+          <!-- #region [ Rest Api Calls ] -->          
+
+          <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\System.Text.Json.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\System.Net.Http.Json.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\System.Threading.Tasks.Extensions.dll</Assembly>
+
+          <!-- #endregion -->
         </Assemblies>
         <ResourceFiles />
         <CustomPages />
