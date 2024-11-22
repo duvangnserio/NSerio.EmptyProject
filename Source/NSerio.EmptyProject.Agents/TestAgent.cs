@@ -9,6 +9,7 @@ using Relativity.Processing.V1.Services.Interfaces.DTOs;
 using Relativity.Services.Search;
 using Relativity.Services.View;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -16,282 +17,207 @@ using WorkloadDiscovery.CustomAttributes;
 
 namespace NSerio.EmptyProject.Agents
 {
-	[Name("Test Agent CI Reporting Pivoting")]
-	[Guid("4ba10ea2-f92d-453b-a2f3-e52be2d2ca98")]
-	[Path(_WORKLOAD_ENPOINT)]
-	public class TestAgent : AgentBase
+	// Core interfaces for better abstraction and dependency injection
+	public interface IDateRangeProvider
 	{
-		private const string _WORKLOAD_ENPOINT = "Relativity.REST/api/NSerioEmptyProject/workload-agent/4ba10ea2-f92d-453b-a2f3-e52be2d2ca98/get-workload";
-		private const string _FULL_FORMAT_DATE = "yyyy-MM-ddTHH:mm:ss.fffZ";
+		(DateTime start, DateTime end) GetDateRange();
+	}
 
+	public interface IProcessingFilterMapper
+	{
+		IProcessingFilterExpressionModel MapToFilter(CriteriaBase criteria);
+	}
 
-		protected override async Task ExecuteAsync()
-		{
-			int workspaceId = 3663333;
-			GetDiscoveredDocumentsRequest request = new GetDiscoveredDocumentsRequest()
-			{
-				//Expression =
-				//"{\"Type\":\"ConditionalExpression\",\"Property\":\"FileExtension\",\"Constraint\":\"15\",\"Value\":\"European\"}",
-				StartingPointOfResult = 0,
-			};
-			using var proxy = Helper.GetServicesManager().CreateProxy<IProcessingFilterManager>(ExecutionIdentity.CurrentUser);
-			//ProcessingFilterData response = await proxy.GetDiscoveredDocumentsAsync(workspaceId, request);
+	// Date range providers implementing the strategy pattern
+	public abstract class BaseDateRangeProvider : IDateRangeProvider
+	{
+		protected const int LastMomentHour = 23;
+		protected const int LastMomentMinute = 59;
+		protected const int LastMomentSecond = 59;
+		protected const int LastMomentMillisecond = 999;
 
-			//string fieldName = nameof(ProcessingFilterResult.FileExtension);
-
-			//var results = response.Results;
-
-			//// Pivot data taking into account the field name using reflection
-
-			//var pivotData = results
-			//	.GroupBy(x => x.GetType().GetProperty(fieldName).GetValue(x))
-			//	.Select(x => new
-			//	{
-			//		x.Key,
-			//		Count = x.Count()
-			//	})
-			//	.ToList();
-
-			//StringBuilder messages = new StringBuilder();
-			//foreach (var x1 in pivotData)
-			//{
-			//	messages.AppendLine($"Key: {x1.Key}, Count: {x1.Count}");
-			//	RaiseMessageBase(messages.ToString());
-			//}
-
-			//var exception = new Exception(messages.ToString());
-
-			//await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(TestAgent));
-
-			await PivotDiscoveredDocumentsAsync(proxy, workspaceId);
-		}
-
-		private async Task PivotDiscoveredDocumentsAsync(IProcessingFilterManager proxy, int workspaceId)
-		{
-			int viewId = 1050017;
-			using var viewManager = Helper.GetServicesManager().CreateProxy<IViewManager>(ExecutionIdentity.CurrentUser);
-			var view = await viewManager.ReadSingleAsync(workspaceId, viewId);
-
-			if (view != null)
-			{
-				IProcessingFilterExpressionModel expression = ConvertCriteriaToProcessingFilter(view.SearchCriteria);
-
-				string expressionJson = JsonConvert.SerializeObject(expression, new StringEnumConverter());
-				var exception = new Exception(expressionJson);
-				await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(PivotDiscoveredDocumentsAsync));
-
-				var request = new GetDiscoveredDocumentsWithPivotOnRequest()
-				{
-					Expression = expressionJson,
-					PivotOnOption = new PivotOnOption()
-					{
-						GroupByProperty = Property.FileExtension,
-					}
-				};
-				var result = await proxy.PivotOnDiscoveredDocumentsAsync(workspaceId, request);
-
-				var resultAsJson = result.ToJSON();
-
-				exception = new Exception(resultAsJson);
-				await Helper.AddToRelativityErrorTabAsync(workspaceId, exception, nameof(PivotDiscoveredDocumentsAsync));
-				RaiseMessageBase(resultAsJson);
-			}
-
-		}
-
-		private IProcessingFilterExpressionModel? MapCriteriaToFilter(Criteria criteria)
-		{
-			var property = GetProperty(criteria.Condition.FieldIdentifier.Name);
-			ProcessingFilterConditionalExpression filterExpression = null;
-
-			if (property != null)
-			{
-				switch (criteria.Condition)
-				{
-					case CriteriaCondition criteriaCondition:
-						ProcessingFilterConstraint filterConstraint = GetConstraint(criteriaCondition.Operator);
-						filterExpression = new ProcessingFilterConditionalExpression
-						{
-							Property = property.Value,
-							Constraint = criteriaCondition.NotOperator ? GetNegateConstraint(filterConstraint) : filterConstraint,
-							Value = criteriaCondition.Value?.ToJSON()
-						};
-						break;
-
-					case CriteriaDateCondition criteriaDateCondition:
-						ProcessingFilterConstraint processingFilterConstraint = GetDateConstraint(criteriaDateCondition.Operator);
-						filterExpression = new ProcessingFilterConditionalExpression
-						{
-							Property = property.Value,
-							Constraint = criteriaDateCondition.NotOperator ? GetNegateConstraint(processingFilterConstraint) : processingFilterConstraint,
-							Value = GetDateValue(criteriaDateCondition)
-						};
-						break;
-
-					default:
-						throw new ArgumentException("Unknown criteria type", nameof(criteria));
-				}
-			}
-
-			return filterExpression;
-		}
-
-		private string GetDateValue(CriteriaDateCondition criteriaDateCondition)
-		{
-			string value = string.Empty;
-			if (criteriaDateCondition.Month != Month.NotSet)
-			{
-				value = new[] { criteriaDateCondition.Month.ToString() }.ToJSON(indented: false, useCamelCase: false);
-			}
-			else
-			{
-				if (criteriaDateCondition.Value.ToString() == "ThisMonth")
-				{
-					//An array of two dates where the first datetime is the start in hours and minutes zero of the month and the second datetime is the end of the month in the end of the day
-					(DateTime startOfMonth, DateTime endOfMonth) = GetThisMonthRange();
-
-					value = new[] { startOfMonth.ToString(_FULL_FORMAT_DATE), endOfMonth.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else if (criteriaDateCondition.Value.ToString() == "ThisWeek")
-				{
-					// An array of two dates where the first date is the start of the week with time zero and the second date is the end of the week
-
-					(DateTime startOfWeek, DateTime endOfWeek) = GetCurrentWeekRange();
-					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else if (criteriaDateCondition.Value.ToString() == "LastWeek")
-				{
-					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					(DateTime startOfWeek, DateTime endOfWeek) = GetLastWeekRange();
-
-					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else if (criteriaDateCondition.Value.ToString() == "NextWeek")
-				{
-					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					(DateTime startOfWeek, DateTime endOfWeek) = GetNextWeekRange();
-
-					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else if (criteriaDateCondition.Value.ToString() == "Last7Days")
-				{
-					// An array of two dates where the first date is the start of the week and the second date is the end of the week with time
-					(DateTime startOfWeek, DateTime endOfWeek) = GetLast7DaysRange();
-
-					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else if (criteriaDateCondition.Value.ToString() == "Last30Days")
-				{
-					// An array of two dates where the first date is the start of the week and the second date is the end of the week
-					(DateTime startOfWeek, DateTime endOfWeek) = GetLast30DaysRange();
-
-					value = new[] { startOfWeek.ToString(_FULL_FORMAT_DATE), endOfWeek.ToString(_FULL_FORMAT_DATE) }.ToJSON(indented: false, useCamelCase: false);
-				}
-				else
-				{
-					value = new[] { criteriaDateCondition.Value.ToString() }.ToJSON(indented: false, useCamelCase: false);
-				}
-			}
-
-			return value;
-		}
-
-		private const int DaysInAWeek = 7;
-		private const int DaysInLast30Days = 30;
-		private const int LastMomentHour = 23;
-		private const int LastMomentMinute = 59;
-		private const int LastMomentSecond = 59;
-		private const int LastMomentMillisecond = 999;
-
-		private static DateTime EndOfDay(DateTime date) =>
+		protected static DateTime EndOfDay(DateTime date) =>
 			date.Date.AddHours(LastMomentHour)
 					 .AddMinutes(LastMomentMinute)
 					 .AddSeconds(LastMomentSecond)
 					 .AddMilliseconds(LastMomentMillisecond);
 
-		private static DateTime StartOfCurrentWeek()
-		{
-			DateTime today = DateTime.Today;
-			int daysSinceMonday = today.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)today.DayOfWeek - 1;
-			return today.AddDays(-daysSinceMonday).Date;
-		}
+		public abstract (DateTime start, DateTime end) GetDateRange();
+	}
 
-		public static (DateTime start, DateTime end) GetThisMonthRange()
+	public class ThisMonthRangeProvider : BaseDateRangeProvider
+	{
+		public override (DateTime start, DateTime end) GetDateRange()
 		{
 			DateTime today = DateTime.Today;
 			DateTime start = new DateTime(today.Year, today.Month, 1);
 			DateTime end = EndOfDay(start.AddMonths(1).AddDays(-1));
 			return (start, end);
 		}
+	}
 
-		public static (DateTime start, DateTime end) GetLastWeekRange()
+	// Additional date range providers
+	public class Last7DaysRangeProvider : BaseDateRangeProvider
+	{
+		private const int DaysInWeek = 7;
+
+		public override (DateTime start, DateTime end) GetDateRange()
+		{
+			DateTime today = DateTime.Today;
+			return (today.AddDays(-DaysInWeek), EndOfDay(today));
+		}
+	}
+
+	public class Last30DaysRangeProvider : BaseDateRangeProvider
+	{
+		private const int DaysInMonth = 30;
+
+		public override (DateTime start, DateTime end) GetDateRange()
+		{
+			DateTime today = DateTime.Today;
+			return (today.AddDays(-DaysInMonth), EndOfDay(today));
+		}
+	}
+
+	public abstract class WeekRangeProvider : BaseDateRangeProvider
+	{
+		protected const int DaysInAWeek = 7;
+
+		protected static DateTime StartOfCurrentWeek()
+		{
+			DateTime today = DateTime.Today;
+			int daysSinceMonday = today.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)today.DayOfWeek - 1;
+			return today.AddDays(-daysSinceMonday).Date;
+		}
+
+		public abstract override (DateTime start, DateTime end) GetDateRange();
+	}
+
+	public class NextWeekRangeProvider : WeekRangeProvider
+	{
+		public override (DateTime start, DateTime end) GetDateRange()
+		{
+			DateTime startOfWeek = StartOfCurrentWeek();
+			DateTime start = startOfWeek.AddDays(DaysInAWeek);
+			DateTime end = EndOfDay(start.AddDays(DaysInAWeek - 1));
+			return (start, end);
+		}
+	}
+
+	public class CurrentWeekRangeProvider : WeekRangeProvider
+	{
+		public override (DateTime start, DateTime end) GetDateRange()
+		{
+			DateTime startOfWeek = StartOfCurrentWeek();
+			DateTime endOfWeek = EndOfDay(startOfWeek.AddDays(6));
+			return (startOfWeek, endOfWeek);
+		}
+	}
+
+	public class LastWeekRangeProvider : WeekRangeProvider
+	{
+		public override (DateTime start, DateTime end) GetDateRange()
 		{
 			DateTime startOfCurrentWeek = StartOfCurrentWeek();
 			DateTime start = startOfCurrentWeek.AddDays(-DaysInAWeek);
 			DateTime end = EndOfDay(start.AddDays(DaysInAWeek - 1));
 			return (start, end);
 		}
+	}
 
-		public static (DateTime start, DateTime end) GetNextWeekRange()
+	public interface IPropertyMapper
+	{
+		Property? GetProperty(string name);
+	}
+
+	public interface IConstraintMapper
+	{
+		ProcessingFilterConstraint GetConstraint(CriteriaConditionEnum criteriaConditionOperator);
+		ProcessingFilterConstraint GetDateConstraint(CriteriaDateConditionEnum dateOperator);
+		ProcessingFilterConstraint GetNegateConstraint(ProcessingFilterConstraint constraint);
+	}
+
+	public interface IDateRangeFactory
+	{
+		IDateRangeProvider CreateProvider(string dateRangeType);
+	}
+
+	public interface IServiceManagerFactory
+	{
+		T CreateProxy<T>(ExecutionIdentity identity) where T : class;
+	}
+
+	// Implementation of PropertyMapper
+	public class PropertyMapper : IPropertyMapper
+	{
+		private static readonly Dictionary<string, Property> PropertyMap = new Dictionary<string, Property>
 		{
-			DateTime startOfCurrentWeek = StartOfCurrentWeek();
-			DateTime start = startOfCurrentWeek.AddDays(DaysInAWeek);
-			DateTime end = EndOfDay(start.AddDays(DaysInAWeek - 1));
-			return (start, end);
+			["Container ID"] = Property.ContainerID,
+			["Container Name"] = Property.ContainerName,
+			["Custodian"] = Property.CustodianArtifactId,
+			["File Extension - Text"] = Property.FileExtension,
+			["Container Extension"] = Property.ContainerExtension,
+			["Data Source"] = Property.DataSourceArtifactId,
+			["Dedupe Status"] = Property.DedupeStatus,
+			["Discovery Group ID"] = Property.DiscoverGroupId,
+			["Exception Category"] = Property.ErrorCategory,
+			["Exception Message"] = Property.ErrorMessage,
+			["Exception Phase"] = Property.ErrorPhase,
+			["Exception Status"] = Property.ErrorStatus,
+			["Extracted Text Location"] = Property.ExtractedTextLocation,
+			["File ID"] = Property.ProcessingFileId,
+			["File Name"] = Property.FileName,
+			["File Size (KB)"] = Property.FileSize,
+			["File Type"] = Property.FileType,
+			["Folder Path"] = Property.FolderPath,
+			["Import Source"] = Property.ImportSource,
+			["Is Container?"] = Property.IsContainer,
+			["Is Embedded?"] = Property.IsEmbedded,
+			["Is Published?"] = Property.IsPublished,
+			["Logical Path"] = Property.LogicalPath,
+			["MD5 Hash"] = Property.MD5Hash,
+			["Original Path"] = Property.OriginalPath,
+			["Parent File ID"] = Property.ParentDocumentId,
+			["Processing Deletion?"] = Property.IsDeleted,
+			["Sender Domain - Text"] = Property.SenderDomain,
+			["SHA-256 Hash"] = Property.SHA256Hash,
+			["SHA1 Hash"] = Property.SHA1Hash,
+			["Sort Date"] = Property.SortDate,
+			["Storage ID"] = Property.StorageId,
+			["Text Extraction Method"] = Property.TextExtractionMethod,
+			["Unprocessable"] = Property.Unprocessable,
+			["Virtual Path - Text"] = Property.VirtualPath
+		};
+
+		public Property? GetProperty(string name)
+		{
+			return PropertyMap.TryGetValue(name, out Property property) ? property : (Property?)null;
 		}
+	}
 
-		public static (DateTime start, DateTime end) GetLast7DaysRange()
+
+	public class ConstraintMapper : IConstraintMapper
+	{
+		public ProcessingFilterConstraint GetConstraint(CriteriaConditionEnum criteriaConditionOperator)
 		{
-			DateTime today = DateTime.Today;
-			DateTime start = today.AddDays(-DaysInAWeek);
-			DateTime end = EndOfDay(today);
-			return (start, end);
-		}
-
-		public static (DateTime start, DateTime end) GetLast30DaysRange()
-		{
-			DateTime today = DateTime.Today;
-			DateTime start = today.AddDays(-DaysInLast30Days);
-			DateTime end = EndOfDay(today);
-			return (start, end);
-		}
-
-		public static (DateTime startOfWeek, DateTime endOfWeek) GetCurrentWeekRange()
-		{
-			// Get the current date
-			DateTime today = DateTime.Today;
-
-			// Calculate the beginning of the week (Monday)
-			int daysSinceMonday = today.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)today.DayOfWeek - 1;
-			DateTime startOfWeek = today.AddDays(-daysSinceMonday);
-
-			// Calculate the end of the week (Sunday)
-			DateTime endOfWeek = startOfWeek.AddDays(6).Date
-				.AddHours(23)
-				.AddMinutes(59)
-				.AddSeconds(59)
-				.AddMilliseconds(999);
-
-			return (startOfWeek, endOfWeek);
-		}
-
-		private ProcessingFilterConstraint GetNegateConstraint(ProcessingFilterConstraint constraint)
-		{
-			return constraint switch
+			return criteriaConditionOperator switch
 			{
-				ProcessingFilterConstraint.Is => ProcessingFilterConstraint.IsNot,
-				ProcessingFilterConstraint.IsIn => ProcessingFilterConstraint.IsNotIn,
-				ProcessingFilterConstraint.IsSet => ProcessingFilterConstraint.IsNotSet,
-				ProcessingFilterConstraint.IsLike => ProcessingFilterConstraint.IsNotLike,
-				ProcessingFilterConstraint.BeginsWith => ProcessingFilterConstraint.DoesNotBeginWith,
-				ProcessingFilterConstraint.EndsWith => ProcessingFilterConstraint.DoesNotEndWith,
-				ProcessingFilterConstraint.Between => ProcessingFilterConstraint.NotBetween,
-				_ => throw new ArgumentOutOfRangeException(nameof(constraint), constraint, null)
+				CriteriaConditionEnum.AnyOfThese => ProcessingFilterConstraint.IsIn,
+				CriteriaConditionEnum.IsLike => ProcessingFilterConstraint.IsLike,
+				CriteriaConditionEnum.EndsWith => ProcessingFilterConstraint.EndsWith,
+				CriteriaConditionEnum.GreaterThan => ProcessingFilterConstraint.IsGreaterThan,
+				CriteriaConditionEnum.GreaterThanOrEqualTo => ProcessingFilterConstraint.IsGreaterThanOrEqualTo,
+				CriteriaConditionEnum.In => ProcessingFilterConstraint.Between,
+				CriteriaConditionEnum.Is => ProcessingFilterConstraint.Is,
+				CriteriaConditionEnum.IsSet => ProcessingFilterConstraint.IsSet,
+				CriteriaConditionEnum.LessThan => ProcessingFilterConstraint.IsLessThan,
+				CriteriaConditionEnum.LessThanOrEqualTo => ProcessingFilterConstraint.IsLessThanOrEqualTo,
+				CriteriaConditionEnum.StartsWith => ProcessingFilterConstraint.BeginsWith,
+				_ => throw new ArgumentOutOfRangeException(nameof(criteriaConditionOperator))
 			};
 		}
 
-		// Helper method to map CriteriaDateConditionEnum to ProcessingFilterConstraintEnum or any relevant constraint enum
-		private ProcessingFilterConstraint GetDateConstraint(CriteriaDateConditionEnum dateOperator)
+		public ProcessingFilterConstraint GetDateConstraint(CriteriaDateConditionEnum dateOperator)
 		{
 			return dateOperator switch
 			{
@@ -303,114 +229,254 @@ namespace NSerio.EmptyProject.Agents
 				CriteriaDateConditionEnum.IsBefore => ProcessingFilterConstraint.IsBefore,
 				CriteriaDateConditionEnum.IsBeforeOrOn => ProcessingFilterConstraint.IsBeforeOrOn,
 				CriteriaDateConditionEnum.IsSet => ProcessingFilterConstraint.IsSet,
-				_ => throw new ArgumentOutOfRangeException(nameof(dateOperator), $"Unknown operator: {dateOperator}")
+				_ => throw new ArgumentOutOfRangeException(nameof(dateOperator))
 			};
 		}
 
-		private ProcessingFilterCompositeExpression MapCriteriaCollectionToComposite(CriteriaCollection criteriaCollection)
+		public ProcessingFilterConstraint GetNegateConstraint(ProcessingFilterConstraint constraint)
 		{
-			var compositeExpression = new ProcessingFilterCompositeExpression
+			return constraint switch
 			{
-				Operator = criteriaCollection.BooleanOperator == BooleanOperatorEnum.And || criteriaCollection.BooleanOperator == BooleanOperatorEnum.None
+				ProcessingFilterConstraint.Is => ProcessingFilterConstraint.IsNot,
+				ProcessingFilterConstraint.IsIn => ProcessingFilterConstraint.IsNotIn,
+				ProcessingFilterConstraint.IsSet => ProcessingFilterConstraint.IsNotSet,
+				ProcessingFilterConstraint.IsLike => ProcessingFilterConstraint.IsNotLike,
+				ProcessingFilterConstraint.BeginsWith => ProcessingFilterConstraint.DoesNotBeginWith,
+				ProcessingFilterConstraint.EndsWith => ProcessingFilterConstraint.DoesNotEndWith,
+				ProcessingFilterConstraint.Between => ProcessingFilterConstraint.NotBetween,
+				_ => throw new ArgumentOutOfRangeException(nameof(constraint))
+			};
+		}
+	}
+
+	public class DateRangeFactory : IDateRangeFactory
+	{
+		private readonly IServiceProvider _serviceProvider;
+
+		public DateRangeFactory(IServiceProvider serviceProvider)
+		{
+			_serviceProvider = serviceProvider;
+		}
+
+		public IDateRangeProvider CreateProvider(string dateRangeType)
+		{
+			return dateRangeType switch
+			{
+				"ThisMonth" => new ThisMonthRangeProvider(),
+				"LastWeek" => new LastWeekRangeProvider(),
+				"ThisWeek" => new CurrentWeekRangeProvider(),
+				"NextWeek" => new NextWeekRangeProvider(),
+				"Last7Days" => new Last7DaysRangeProvider(),
+				"Last30Days" => new Last30DaysRangeProvider(),
+				_ => throw new ArgumentException($"Unknown date range type: {dateRangeType}")
+			};
+		}
+	}
+
+	// Processing filter mapping implementation
+	public class ProcessingFilterMapper : IProcessingFilterMapper
+	{
+		private readonly IPropertyMapper _propertyMapper;
+		private readonly IConstraintMapper _constraintMapper;
+		private readonly IDateRangeFactory _dateRangeFactory;
+
+		public ProcessingFilterMapper(
+			IPropertyMapper propertyMapper,
+			IConstraintMapper constraintMapper,
+			IDateRangeFactory dateRangeFactory)
+		{
+			_propertyMapper = propertyMapper;
+			_constraintMapper = constraintMapper;
+			_dateRangeFactory = dateRangeFactory;
+		}
+
+		public IProcessingFilterExpressionModel MapToFilter(CriteriaBase criteriaBase)
+		{
+			return criteriaBase switch
+			{
+				CriteriaCollection collection => MapCriteriaCollectionToComposite(collection),
+				Criteria criteria => MapCriteriaToFilter(criteria),
+				_ => throw new ArgumentException("Unknown criteria type", nameof(criteriaBase))
+			};
+		}
+
+		private IProcessingFilterExpressionModel? MapCriteriaToFilter(Criteria criteria)
+		{
+			var property = _propertyMapper.GetProperty(criteria.Condition.FieldIdentifier.Name);
+			if (property == null) return null;
+
+			return criteria.Condition switch
+			{
+				CriteriaCondition condition => CreateConditionalExpression(condition, property.Value),
+				CriteriaDateCondition dateCondition => CreateDateExpression(dateCondition, property.Value),
+				_ => throw new ArgumentException("Unknown criteria condition type", nameof(criteria))
+			};
+		}
+
+		private ProcessingFilterCompositeExpression MapCriteriaCollectionToComposite(CriteriaCollection collection)
+		{
+			return new ProcessingFilterCompositeExpression
+			{
+				Operator = collection.BooleanOperator == BooleanOperatorEnum.And ||
+						  collection.BooleanOperator == BooleanOperatorEnum.None
 					? ProcessingFilterOperator.And
 					: ProcessingFilterOperator.Or,
-				Expressions = criteriaCollection.Conditions
-					.Select(c => c is Criteria criteria
-						? MapCriteriaToFilter(criteria)
-						: MapCriteriaCollectionToComposite((CriteriaCollection)c)) // Recursive for nested collections
+				Expressions = collection.Conditions
+					.Select(MapToFilter)
 					.Where(t => t != null)
 					.ToArray()
 			};
-
-			return compositeExpression;
 		}
 
-		public IProcessingFilterExpressionModel ConvertCriteriaToProcessingFilter(CriteriaBase criteriaBase)
+		private const string FullFormatDate = "yyyy-MM-ddTHH:mm:ss.fffZ";
+
+		private ProcessingFilterConditionalExpression CreateConditionalExpression(
+			CriteriaCondition condition,
+			Property property)
 		{
-			if (criteriaBase is CriteriaCollection criteriaCollection)
+			var filterConstraint = _constraintMapper.GetConstraint(condition.Operator);
+			return new ProcessingFilterConditionalExpression
 			{
-				return MapCriteriaCollectionToComposite(criteriaCollection);
-			}
-			else if (criteriaBase is Criteria criteria)
-			{
-				return MapCriteriaToFilter(criteria);
-			}
-
-			throw new ArgumentException("Unknown criteria type", nameof(criteriaBase));
-		}
-
-
-		public Property? GetProperty(string name)
-		{
-			return name switch
-			{
-				"Container ID" => Property.ContainerID,
-				"Container Name" => Property.ContainerName,
-				"Custodian" => Property.CustodianArtifactId,
-				"File Extension - Text" => Property.FileExtension,
-				"Container Extension" => Property.ContainerExtension,
-				"Data Source" => Property.DataSourceArtifactId,
-				"Dedupe Status" => Property.DedupeStatus,
-				"Discovery Group ID" => Property.DiscoverGroupId,
-				"Exception Category" => Property.ErrorCategory,
-				"Exception Message" => Property.ErrorMessage,
-				"Exception Phase" => Property.ErrorPhase,
-				"Exception Status" => Property.ErrorStatus,
-				"Extracted Text Location" => Property.ExtractedTextLocation,
-				"File ID" => Property.ProcessingFileId,
-				"File Name" => Property.FileName,
-				"File Size (KB)" => Property.FileSize,
-				"File Type" => Property.FileType,
-				"Folder Path" => Property.FolderPath,
-				"Import Source" => Property.ImportSource,
-				"Is Container?" => Property.IsContainer,
-				"Is Embedded?" => Property.IsEmbedded,
-				"Is Published?" => Property.IsPublished,
-				"Logical Path" => Property.LogicalPath,
-				"MD5 Hash" => Property.MD5Hash,
-				"Original Path" => Property.OriginalPath,
-				"Parent File ID" => Property.ParentDocumentId,
-				"Processing Deletion?" => Property.IsDeleted,
-				"Sender Domain - Text" => Property.SenderDomain,
-				"SHA-256 Hash" => Property.SHA256Hash,
-				"SHA1 Hash" => Property.SHA1Hash,
-				"Sort Date" => Property.SortDate,
-				"Storage ID" => Property.StorageId,
-				"Text Extraction Method" => Property.TextExtractionMethod,
-				"Unprocessable" => Property.Unprocessable,
-				"Virtual Path - Text" => Property.VirtualPath,
-				_ => null
+				Property = property,
+				Constraint = condition.NotOperator
+					? _constraintMapper.GetNegateConstraint(filterConstraint)
+					: filterConstraint,
+				Value = condition.Value?.ToJSON()
 			};
 		}
 
-
-		private ProcessingFilterConstraint GetConstraint(CriteriaConditionEnum criteriaConditionOperator)
+		private ProcessingFilterConditionalExpression CreateDateExpression(
+			CriteriaDateCondition dateCondition,
+			Property property)
 		{
-			return criteriaConditionOperator switch
+			var filterConstraint = _constraintMapper.GetDateConstraint(dateCondition.Operator);
+			return new ProcessingFilterConditionalExpression
 			{
-				//case CriteriaConditionEnum.AllOfThese Not Mapped since is not available in condition builder of view In Relativity
-				CriteriaConditionEnum.AnyOfThese => ProcessingFilterConstraint.IsIn,
-				CriteriaConditionEnum.IsLike => ProcessingFilterConstraint.IsLike,
-				//case CriteriaConditionEnum.Contains: Does not appear in Condition builder
-				CriteriaConditionEnum.EndsWith => ProcessingFilterConstraint.EndsWith,
-				CriteriaConditionEnum.GreaterThan => ProcessingFilterConstraint.IsGreaterThan,
-				CriteriaConditionEnum.GreaterThanOrEqualTo => ProcessingFilterConstraint.IsGreaterThanOrEqualTo,
-				CriteriaConditionEnum.In =>
-					ProcessingFilterConstraint
-						.Between // Not sure about this mapping, the view returns for example ThisMonth, but the processing filter is with between with an array
-				,
-				CriteriaConditionEnum.Is => ProcessingFilterConstraint.Is,
-				CriteriaConditionEnum.IsSet => ProcessingFilterConstraint.IsSet,
-				CriteriaConditionEnum.LessThan => ProcessingFilterConstraint.IsLessThan,
-				CriteriaConditionEnum.LessThanOrEqualTo => ProcessingFilterConstraint.IsLessThanOrEqualTo,
-				CriteriaConditionEnum.StartsWith => ProcessingFilterConstraint.BeginsWith,
-				//CriteriaConditionEnum.Unknown => expr,
-				//CriteriaConditionEnum.AllOfThese => expr,
-				//CriteriaConditionEnum.Contains => expr,
-				//CriteriaConditionEnum.IsLoggedInUser => expr,
-				//CriteriaConditionEnum.LuceneSearch => expr,
-				_ => throw new ArgumentOutOfRangeException(nameof(criteriaConditionOperator), criteriaConditionOperator, null)
+				Property = property,
+				Constraint = dateCondition.NotOperator
+					? _constraintMapper.GetNegateConstraint(filterConstraint)
+					: filterConstraint,
+				Value = GetDateValue(dateCondition)
 			};
+		}
+
+		private string GetDateValue(CriteriaDateCondition dateCondition)
+		{
+			if (dateCondition.Month != Month.NotSet)
+			{
+				return new[] { dateCondition.Month.ToString() }
+					.ToJSON(indented: false, useCamelCase: false);
+			}
+
+			var dateValue = dateCondition.Value.ToString();
+			if (IsPresetDateRange(dateValue))
+			{
+				var provider = _dateRangeFactory.CreateProvider(dateValue);
+				var (start, end) = provider.GetDateRange();
+				return new[] { start.ToString(FullFormatDate), end.ToString(FullFormatDate) }
+					.ToJSON(indented: false, useCamelCase: false);
+			}
+
+			return new[] { dateValue }.ToJSON(indented: false, useCamelCase: false);
+		}
+
+		private static bool IsPresetDateRange(string value)
+		{
+			return value == "ThisMonth"
+				   || value == "ThisWeek"
+				   || value == "LastWeek"
+				   || value == "NextWeek"
+				   || value == "Last7Days"
+				   || value == "Last30Days";
+		}
+	}
+
+	// Refactored TestAgent
+	[Name("Test Agent CI Reporting Pivoting")]
+	[Guid("4ba10ea2-f92d-453b-a2f3-e52be2d2ca98")]
+	[Path(WorkloadEndpoint)]
+
+	public class TestAgent : AgentBase
+	{
+		private const string WorkloadEndpoint = "Relativity.REST/api/NSerioEmptyProject/workload-agent/4ba10ea2-f92d-453b-a2f3-e52be2d2ca98/get-workload";
+		private readonly IProcessingFilterMapper _filterMapper;
+		private readonly IServiceManagerFactory _serviceManagerFactory;
+
+		public TestAgent(
+			IProcessingFilterMapper filterMapper,
+			IServiceManagerFactory serviceManagerFactory)
+		{
+			_filterMapper = filterMapper;
+			_serviceManagerFactory = serviceManagerFactory;
+		}
+
+		protected override async Task ExecuteAsync()
+		{
+			int workspaceId = 3663333;
+			using var proxy = _serviceManagerFactory
+				.CreateProxy<IProcessingFilterManager>(ExecutionIdentity.CurrentUser);
+
+			await PivotDiscoveredDocumentsAsync(proxy, workspaceId);
+		}
+
+		private async Task PivotDiscoveredDocumentsAsync(
+			IProcessingFilterManager proxy,
+			int workspaceId)
+		{
+			const int viewId = 1050017;
+			using var viewManager = _serviceManagerFactory
+				.CreateProxy<IViewManager>(ExecutionIdentity.CurrentUser);
+
+			var view = await viewManager.ReadSingleAsync(workspaceId, viewId);
+			if (view == null) return;
+
+			var expression = _filterMapper.MapToFilter(view.SearchCriteria);
+			string expressionJson = JsonConvert.SerializeObject(
+				expression,
+				new StringEnumConverter());
+
+			await LogExpressionAsync(workspaceId, expressionJson);
+
+			var result = await GetPivotResultsAsync(proxy, workspaceId, expressionJson);
+			await LogResultAsync(workspaceId, result);
+		}
+
+		private async Task<string> GetPivotResultsAsync(
+			IProcessingFilterManager proxy,
+			int workspaceId,
+			string expressionJson)
+		{
+			var request = new GetDiscoveredDocumentsWithPivotOnRequest
+			{
+				Expression = expressionJson,
+				PivotOnOption = new PivotOnOption
+				{
+					GroupByProperty = Property.FileExtension,
+				}
+			};
+
+			var result = await proxy.PivotOnDiscoveredDocumentsAsync(workspaceId, request);
+			return result.ToJSON();
+		}
+
+		private async Task LogExpressionAsync(int workspaceId, string expressionJson)
+		{
+			var exception = new Exception(expressionJson);
+			await Helper.AddToRelativityErrorTabAsync(
+				workspaceId,
+				exception,
+				nameof(PivotDiscoveredDocumentsAsync));
+		}
+
+		private async Task LogResultAsync(int workspaceId, string resultJson)
+		{
+			var exception = new Exception(resultJson);
+			await Helper.AddToRelativityErrorTabAsync(
+				workspaceId,
+				exception,
+				nameof(PivotDiscoveredDocumentsAsync));
+
+			RaiseMessageBase(resultJson);
 		}
 	}
 }
