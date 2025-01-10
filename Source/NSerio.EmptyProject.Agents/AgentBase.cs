@@ -1,3 +1,4 @@
+using Cimplifi.CILicensing.LicenseValidator.Helpers;
 using NSerio.EmptyProject.Core.Helpers;
 using NSerio.Utils;
 using NSerio.Utils.Relativity;
@@ -43,6 +44,8 @@ namespace NSerio.EmptyProject.Agents
 
 			try
 			{
+				Helper.ValidateLicenseWithinAgentAsync().ToSync();
+
 				ExecuteAsync().ToSync();
 			}
 			catch (Exception exception)

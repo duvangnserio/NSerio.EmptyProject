@@ -25,6 +25,7 @@ namespace NSerio.EmptyProject.Agents
 
 		protected override async Task ExecuteAsync()
 		{
+			RaiseMessageBase("License is valid");
 			var httpClientRepository = new HttpClientRepository();
 			httpClientRepository.SetBaseUrl("https://naturemap-webapi.onrender.com/api/");
 

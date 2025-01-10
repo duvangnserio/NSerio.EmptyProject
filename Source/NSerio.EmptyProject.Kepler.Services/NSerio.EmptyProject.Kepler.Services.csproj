@@ -46,17 +46,29 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cimplifi.CILicensing.Core.Shared, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cimplifi.LicenseValidator.1.0.11\lib\net472\Cimplifi.CILicensing.Core.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Cimplifi.CILicensing.LicenseValidator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cimplifi.LicenseValidator.1.0.11\lib\net472\Cimplifi.CILicensing.LicenseValidator.dll</HintPath>
+    </Reference>
     <Reference Include="kCura.Relativity.Client, Version=15.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Relativity.Rsapi.15.6.0\lib\net462\kCura.Relativity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NSerio.Utils, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NSerio.Utils.1.0.12.28\lib\net46\NSerio.Utils.dll</HintPath>
+      <HintPath>..\packages\NSerio.Utils.1.1.0.43\lib\net46\NSerio.Utils.dll</HintPath>
     </Reference>
     <Reference Include="NSerio.Utils.Relativity, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NSerio.Utils.Relativity.1.0.12.28\lib\net462\NSerio.Utils.Relativity.dll</HintPath>
+    </Reference>
+    <Reference Include="NSerio.Utils.SimpleInjector, Version=1.1.0.42, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSerio.Utils.SimpleInjector.1.1.0.43\lib\net46\NSerio.Utils.SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="Relativity.API, Version=17.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Relativity.API.17.0.4\lib\net462\Relativity.API.dll</HintPath>
@@ -67,9 +79,37 @@
     <Reference Include="Relativity.Shared, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Relativity.Shared.SDK.1.7.0\lib\net462\Relativity.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog, Version=4.1.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.4.1.0\lib\net471\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.ILogger, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.ILogger.1.0.3\lib\netstandard2.0\Serilog.Sinks.ILogger.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.0\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Channels, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.8.0.0\lib\net462\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="WorkloadDiscovery, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Relativity.Platform.Agent.WorkloadDiscovery.SDK.0.2.1\lib\net462\WorkloadDiscovery.dll</HintPath>
@@ -94,6 +134,7 @@
     <Compile Include="TestWorkloadManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +146,12 @@
       <Project>{8A9F8867-5345-4C52-8950-96DE3294900B}</Project>
       <Name>NSerio.EmptyProject.Kepler.Services.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SqlStatement\InstanceSetting\InstanceSetting_GetBySectionAndName.sql" />
+    <Content Include="Resources\SqlStatement\LicenseValidationHistory\LicenseValidationHistory_CreateTable.sql" />
+    <Content Include="Resources\SqlStatement\LicenseValidationHistory\LicenseValidationHistory_GetExecutionOfTheLast24Hours.sql" />
+    <Content Include="Resources\SqlStatement\LicenseValidationHistory\LicenseValidationHistory_Insert.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

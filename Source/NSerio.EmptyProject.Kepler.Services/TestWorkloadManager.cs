@@ -1,4 +1,5 @@
-﻿using NSerio.EmptyProject.Core.Helpers;
+﻿using Cimplifi.CILicensing.LicenseValidator.Helpers;
+using NSerio.EmptyProject.Core.Helpers;
 using NSerio.EmptyProject.Kepler.Services.Interfaces;
 using Relativity.API;
 using System;
@@ -13,10 +14,12 @@ namespace NSerio.EmptyProject.Kepler.Services
 
 		public TestWorkloadManager(IHelper helper) : base(helper) { }
 
-		public Task<Workload> GetWorkloadAsync(Guid guid)
+		public async Task<Workload> GetWorkloadAsync(Guid guid)
 		{
+			await Helper.ValidateLicenseWithinKeplerServiceAsync();
+
 			Workload workload = new Workload { Size = WorkloadSize.One };
-			return Task.FromResult(workload);
+			return workload;
 		}
 	}
 }

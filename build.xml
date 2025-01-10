@@ -75,6 +75,10 @@
           <Assembly>Source\NSerio.EmptyProject.Agents\bin\x64\Release\System.Threading.Tasks.Extensions.dll</Assembly>
 
           <!-- #endregion -->
+
+          <!-- Cimplifi.CILicensing.LicenseValidator -->
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\Cimplifi.CILicensing.LicenseValidator.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\Cimplifi.CILicensing.Core.Shared.dll</Assembly>
         </Assemblies>
         <ResourceFiles />
         <CustomPages />

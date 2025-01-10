@@ -110,6 +110,18 @@
       <Name>System.Threading.Tasks.Extensions.dll</Name>
       <Notes />
     </Assembly>
+    <Assembly>
+      <ArtifactId>7439731</ArtifactId>
+      <Keywords />
+      <Name>Cimplifi.CILicensing.LicenseValidator.dll</Name>
+      <Notes />
+    </Assembly>
+    <Assembly>
+      <ArtifactId>7439732</ArtifactId>
+      <Keywords />
+      <Name>Cimplifi.CILicensing.Core.Shared.dll</Name>
+      <Notes />
+    </Assembly>
   </Assemblies>
   <ResourceFiles />
   <ExternalTabs />
