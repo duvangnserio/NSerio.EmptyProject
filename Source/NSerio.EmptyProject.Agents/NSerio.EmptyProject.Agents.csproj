@@ -195,6 +195,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ApiCallRenderTestAgent.cs" />
+    <Compile Include="GenerateSasTokenAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AgentBase.cs" />
     <Compile Include="TestAgent.cs" />

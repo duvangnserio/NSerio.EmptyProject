@@ -94,6 +94,7 @@ namespace NSerio.EmptyProject.Core
 		{
 			container.RegisterSingleton(() => helper);
 			container.RegisterSingleton(() => helper.GetLoggerFactory().GetLogger());
+			container.RegisterSingleton(helper.GetSecretStore);
 
 			container.Register(() => helper.GetServicesManager());
 			container.Register(() => helper.GetServicesManager().CreateProxy<IObjectManager>(ExecutionIdentity.CurrentUser));

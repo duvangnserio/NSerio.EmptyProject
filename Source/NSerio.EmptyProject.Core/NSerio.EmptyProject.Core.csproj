@@ -145,6 +145,13 @@
     </Compile>
     <Compile Include="Domains\ITransactionsTestDomain.cs" />
     <Compile Include="DataProviders\ITransactionTestDataProvider.cs" />
+    <Compile Include="Domains\ITransferDomain.cs" />
+    <Compile Include="Domains\Implementation\NserioEntryProjectTransferDomain.cs" />
+    <Compile Include="RelativityPrivate\DataContracts\GetReadonlyToken\BaseRequest.cs" />
+    <Compile Include="RelativityPrivate\DataContracts\GetReadonlyToken\GetTokenResult.cs" />
+    <Compile Include="RelativityPrivate\DataContracts\GetReadonlyToken\GetReadOnlyTokenRequest.cs" />
+    <Compile Include="RelativityPrivate\ITransferController.cs" />
+    <Compile Include="RelativityPrivate\ITransferServiceModule.cs" />
     <Compile Include="Repositories\ITransactionTestRepository.cs" />
     <Compile Include="Domains\Implementation\TransactionsTestDomain.cs" />
     <Compile Include="DataProviders\Implementation\TransactionTestDataProvider.cs" />

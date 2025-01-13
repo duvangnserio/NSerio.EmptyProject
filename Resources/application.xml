@@ -153,6 +153,20 @@
       <MinInstanceResourcePool>0</MinInstanceResourcePool>
       <MaxInstanceResourcePool>0</MaxInstanceResourcePool>
     </AgentType>
+    <AgentType>
+      <ArtifactId>1019536</ArtifactId>
+      <Guid>388AF2DC-D748-4604-9E94-EF9150A344B8</Guid>
+      <AgentTypeName>Generate Sas Token Test Agent</AgentTypeName>
+      <FullNameSpace>NSerio.EmptyProject.Agents.GenerateSasTokenAgent</FullNameSpace>
+      <DefaultInterval>60</DefaultInterval>
+      <DefaultLogging>10</DefaultLogging>
+      <MinInstanceEnvironment>0</MinInstanceEnvironment>
+      <MaxInstanceEnvironment>0</MaxInstanceEnvironment>
+      <MinInstanceServer>0</MinInstanceServer>
+      <MaxInstanceServer>0</MaxInstanceServer>
+      <MinInstanceResourcePool>0</MinInstanceResourcePool>
+      <MaxInstanceResourcePool>0</MaxInstanceResourcePool>
+    </AgentType>
   </AgentTypes>
   <IsRelativityApplication>true</IsRelativityApplication>
   <InstallEventHandlers>
