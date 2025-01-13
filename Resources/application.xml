@@ -127,12 +127,12 @@
   <ExternalTabs />
   <ExtractionDate>2023-07-13T21:54:46.0701175Z</ExtractionDate>
   <Guid>86c02553-a459-47ee-9a5b-b8d517cd0f9b</Guid>
-  <Name>NSerio.EmptyProject</Name>
+  <Name>DG POC Tests</Name>
   <Objects />
   <ParentTabs />
   <RelativityVersion>55.0.21.0</RelativityVersion>
-  <Version>0.0.0.1</Version>
-  <SchemaVersion>0.0.0.1</SchemaVersion>
+  <Version>0.0.0.6</Version>
+  <SchemaVersion>0.0.0.6</SchemaVersion>
   <TabDisplay>false</TabDisplay>
   <OriginSignature>e7e47b90-b99b-4f4f-9f54-11a92ee54c7e</OriginSignature>
   <MasterScripts />
