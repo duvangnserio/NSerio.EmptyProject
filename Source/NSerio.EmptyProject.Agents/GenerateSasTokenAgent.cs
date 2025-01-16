@@ -19,7 +19,7 @@ namespace NSerio.EmptyProject.Agents
 		{
 			RaiseMessage("Starting Generate Sas Token Agent", 10);
 
-			int workspaceId = 1246876;
+			int workspaceId = 10585512;
 			using IDomainManager domainManager = Helper.GetDomainManager();
 			var token = await domainManager.CreateProxy<ITransferDomain>().GetReadOnlyTokenAsync(workspaceId);
 
