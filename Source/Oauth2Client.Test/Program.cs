@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace Oauth2Client.Test
@@ -74,7 +75,7 @@ namespace Oauth2Client.Test
 
 		private Task<HttpResponseMessage> DoPetition(HttpClient client, ApiMethodEnum serviceMethod, string resourcePath, object bodyContent = null)
 		{
-			task;
+			Task<HttpResponseMessage> task;
 			switch (serviceMethod)
 			{
 				case ApiMethodEnum.Get:

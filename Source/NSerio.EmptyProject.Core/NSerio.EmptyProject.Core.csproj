@@ -180,6 +180,7 @@
     <Compile Include="../version/SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Domains\Implementation\CimplifiLicenseGenerator.cs" />
     <Compile Include="Domains\ITransactionsTestDomain.cs" />
     <Compile Include="DataProviders\ITransactionTestDataProvider.cs" />
     <Compile Include="Domains\ITransferDomain.cs" />
@@ -189,7 +190,7 @@
     <Compile Include="RelativityPrivate\DataContracts\GetReadonlyToken\GetReadOnlyTokenRequest.cs" />
     <Compile Include="RelativityPrivate\ITransferController.cs" />
     <Compile Include="RelativityPrivate\ITransferServiceModule.cs" />
-    <Compile Include="Repositories\HttpClientRepository.cs" />
+    <Compile Include="Repositories\Implementation\HttpClientRepository.cs" />
     <Compile Include="Repositories\ITransactionTestRepository.cs" />
     <Compile Include="Domains\Implementation\TransactionsTestDomain.cs" />
     <Compile Include="DataProviders\Implementation\TransactionTestDataProvider.cs" />

@@ -1,6 +1,6 @@
 ﻿using NSerio.EmptyProject.Core.RelativityPrivate;
 using NSerio.EmptyProject.Core.RelativityPrivate.DataContracts.GetReadonlyToken;
-using NSerio.EmptyProject.Core.Repositories;
+using NSerio.EmptyProject.Core.Repositories.Implementation;
 using NSerio.Utils;
 using NSerio.Utils.Relativity;
 using Relativity.API;

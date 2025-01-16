@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace NSerio.EmptyProject.Core.Repositories
+namespace NSerio.EmptyProject.Core.Repositories.Implementation
 {
 	public class HttpClientRepository
 	{
@@ -142,4 +142,5 @@ namespace NSerio.EmptyProject.Core.Repositories
 		Patch,
 		Delete
 	}
+
 }

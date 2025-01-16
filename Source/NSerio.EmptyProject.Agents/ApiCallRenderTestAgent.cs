@@ -1,5 +1,6 @@
 ﻿using kCura.Agent.CustomAttributes;
 using NSerio.EmptyProject.Core.Helpers;
+using NSerio.EmptyProject.Core.Repositories.Implementation;
 using NSerio.EmptyProject.Core.Repositories;
 using NSerio.Utils;
 using NSerio.Utils.Relativity;

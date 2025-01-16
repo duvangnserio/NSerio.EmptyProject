@@ -1,4 +1,5 @@
-﻿using NSerio.EmptyProject.Core.Helpers;
+﻿using NSerio.EmptyProject.Core.Domains.Implementation;
+using NSerio.EmptyProject.Core.Helpers;
 using NSerio.EmptyProject.Kepler.Services.Interfaces;
 using Relativity.API;
 using System;
@@ -17,6 +18,12 @@ namespace NSerio.EmptyProject.Kepler.Services
 			await Task.Yield();
 			var utcNowAsString = DateTime.UtcNow.ToString("yyyy/MM/dd hh:mm:ss.fff tt");
 			return $"Utc Now: '{utcNowAsString}'";
+		}
+
+		public async Task<string> GenerateLicenseAsync(string instanceIdentifier)
+		{
+			return await ExecuteDomainServiceAsync<ICimplifiLicenseGenerator, string>(-1, t =>
+				t.GenerateLicenseAsync(instanceIdentifier));
 		}
 	}
 }
