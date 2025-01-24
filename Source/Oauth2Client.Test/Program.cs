@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Relativity.OAuth2Client.IdentityModel.Client;
+using Relativity.OAuth2Client.IdentityModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +8,120 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace Oauth2Client.Test
 {
 	internal class Program
 	{
+		private static readonly string _OAUTH2_CLIENT_ID = "9140d76d8ad043b5b2bcc74e40f6d9e0";
+		private static readonly string _OAUTH2_CLIENT_SECRET = "724db8b57bd7259351dd4a8284e10682513f5051";
+		private static readonly string _RELATIVITY_INSTANCE = "https://nserio-us-development.relativity.one/";
+
 		static void Main(string[] args)
+		{
+			string oAuth2AccessToken = GetOAuth2AccessToken();
+			string defaultFileRepository = @"\\files.t013.esus025064.relativity.one\T013\Files\EDDS10585512";
+			GetTokenResult tokenResult = GetReadonlyTokenOauthAsync(defaultFileRepository, oAuth2AccessToken)
+				.ConfigureAwait(false)
+				.GetAwaiter()
+				.GetResult();
+
+			Console.WriteLine(tokenResult.SasUrl);
+		}
+
+		private static async Task<GetTokenResult> GetReadonlyTokenOauthAsync(string defaultFileRepository, string accessToken)
+		{
+			string url = "Relativity.Rest/API/Transfer.Service/v1/Transfer/GetReadOnlyToken";
+
+			var request = new GetReadOnlyTokenRequest
+			{
+				Path = defaultFileRepository
+			};
+
+			var payload = new
+			{
+				request
+			};
+
+			var headers = new Dictionary<string, string>()
+			{
+				{
+					"Authorization", "Bearer " + accessToken
+				},
+				{
+					"X-CSRF-Header", "-"
+				}
+			};
+
+			var httpClientRepository = new HttpClientRepository();
+			httpClientRepository.SetBaseUrl(_RELATIVITY_INSTANCE);
+			var tokenResult = await httpClientRepository.PostAsync<GetTokenResult>(url, payload, headers);
+
+			return tokenResult.Data;
+		}
+
+		private static string GetOAuth2AccessToken()
+		{
+			using (var clientToken = new TokenClient($"{_RELATIVITY_INSTANCE}/Relativity/Identity/connect/token", _OAUTH2_CLIENT_ID, _OAUTH2_CLIENT_SECRET))
+			{
+				ITokenResponse token = clientToken.RequestClientCredentialsAsync("UserInfoAccess")
+					.ConfigureAwait(false)
+					.GetAwaiter()
+					.GetResult();
+
+				if (token.Exception != null)
+				{
+					throw token.Exception;
+				}
+
+				if (token.IsError)
+				{
+					throw new AuthenticationException($"{token.Error}: {token.ErrorDescription}");
+				}
+
+				string accessToken = token.AccessToken;
+				return accessToken;
+			}
+		}
+	}
+
+	public class GetReadOnlyTokenRequest : BaseRequest
+	{
+		public string Path
+		{
+			get;
+			set;
+		}
+
+		public GetReadOnlyTokenRequest()
+		{
+		}
+	}
+
+	public class BaseRequest
+	{
+		public Guid CorrelationID
+		{
+			get;
+			set;
+		}
+
+		public BaseRequest()
+		{
+		}
+	}
+
+	public class GetTokenResult
+	{
+		public Uri SasUrl
+		{
+			get;
+			set;
+		}
+
+		public GetTokenResult()
 		{
 		}
 	}

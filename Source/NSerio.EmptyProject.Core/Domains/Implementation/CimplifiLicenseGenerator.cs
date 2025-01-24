@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NSerio.EmptyProject.Core.Repositories.Implementation;
+using NSerio.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace NSerio.EmptyProject.Core.Domains.Implementation
 			var license = await httpClientRepository
 				.GetAsync<GenerateLicenseResponseModel>($"api/license/{instanceIdentifier}", headers);
 
-			return license.Data.Data.Token;
+			return license.ToJSON();
 		}
 	}
 
