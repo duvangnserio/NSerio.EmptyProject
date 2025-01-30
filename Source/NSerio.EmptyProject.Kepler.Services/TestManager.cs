@@ -25,5 +25,11 @@ namespace NSerio.EmptyProject.Kepler.Services
 			return await ExecuteDomainServiceAsync<ICimplifiLicenseGenerator, string>(-1, t =>
 				t.GenerateLicenseAsync(instanceIdentifier));
 		}
+
+		public async Task<bool> ValidateLicenseAsync(ValidateLicenseRequestModel request)
+		{
+			return await ExecuteDomainServiceAsync<ICimplifiLicenseGenerator, bool>(-1, t =>
+				t.ValidateLicenseAsync(request));
+		}
 	}
 }

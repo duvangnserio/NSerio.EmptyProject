@@ -22,7 +22,7 @@ namespace Oauth2Client.Test
 		static void Main(string[] args)
 		{
 			string oAuth2AccessToken = GetOAuth2AccessToken();
-			string defaultFileRepository = @"\\files.t013.esus025064.relativity.one\T013\Files\EDDS10585512";
+			string defaultFileRepository = @"\\files.t013.esus025064.relativity.one\T013\Files\EDDS3663333";
 			GetTokenResult tokenResult = GetReadonlyTokenOauthAsync(defaultFileRepository, oAuth2AccessToken)
 				.ConfigureAwait(false)
 				.GetAwaiter()

@@ -77,8 +77,7 @@
           <!-- #endregion -->
 
           <!-- Cimplifi.CILicensing.LicenseValidator -->
-          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\Cimplifi.CILicensing.LicenseValidator.dll</Assembly>
-          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\Cimplifi.CILicensing.Core.Shared.dll</Assembly>
+          <Assembly>Source\NSerio.EmptyProject.Kepler.Services\bin\x64\Release\Cimplifi.CILicensing.LicenseValidator.dll</Assembly>          
         </Assemblies>
         <ResourceFiles />
         <CustomPages />

@@ -1,4 +1,3 @@
-using Cimplifi.CILicensing.LicenseValidator.Helpers;
 using NSerio.EmptyProject.Core;
 using NSerio.EmptyProject.Core.Extensions;
 using NSerio.EmptyProject.Core.Helpers;
@@ -42,7 +41,7 @@ namespace NSerio.EmptyProject.Kepler.Services
 		{
 			try
 			{
-				await Helper.ValidateLicenseWithinKeplerServiceAsync();
+				//await Helper.ValidateLicenseWithinKeplerServiceAsync();
 
 				T domainProxy = DomainManager.CreateProxy<T>();
 				return await serviceMethodAsync(domainProxy);
@@ -57,7 +56,7 @@ namespace NSerio.EmptyProject.Kepler.Services
 		{
 			try
 			{
-				await Helper.ValidateLicenseWithinKeplerServiceAsync();
+				//await Helper.ValidateLicenseWithinKeplerServiceAsync();
 
 				T domainProxy = DomainManager.CreateProxy<T>();
 				await serviceMethodAsync(domainProxy);

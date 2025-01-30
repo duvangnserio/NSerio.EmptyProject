@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Cimplifi.CILicensing.LicenseValidator.Helpers;
+using Cimplifi.CILicensing.LicenseValidator.Models;
+using Newtonsoft.Json;
 using NSerio.EmptyProject.Core.Repositories.Implementation;
 using NSerio.Utils;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ namespace NSerio.EmptyProject.Core.Domains.Implementation
 	public interface ICimplifiLicenseGenerator : IDomain
 	{
 		Task<string> GenerateLicenseAsync(string instanceIdentifier);
+		Task<bool> ValidateLicenseAsync(ValidateLicenseRequestModel request);
 	}
 
 	internal class CimplifiLicenseGenerator : ICimplifiLicenseGenerator
@@ -23,10 +26,36 @@ namespace NSerio.EmptyProject.Core.Domains.Implementation
 			};
 
 			var license = await httpClientRepository
-				.GetAsync<GenerateLicenseResponseModel>($"api/license/{instanceIdentifier}", headers);
+				.GetAsync<GenerateLicenseResponseModel>($"api/license/{instanceIdentifier?.ToLower()}", headers);
 
 			return license.ToJSON();
 		}
+
+		public Task<bool> ValidateLicenseAsync(ValidateLicenseRequestModel request)
+		{
+			var licenseDescriptor = new LicenseDescriptorModel()
+			{
+				PublicKey = request.PublicKey,
+				Token = request.Token
+			};
+
+			var result = LicenseValidatorHelper.ValidateLicense(licenseDescriptor, request.InstanceIdentifier.ToLowerInvariant());
+
+
+			return Task.FromResult(result);
+		}
+	}
+
+	public class ValidateLicenseRequestModel
+	{
+		[JsonProperty("token")]
+		public string Token { get; set; }
+
+		[JsonProperty("publicKey")]
+		public string PublicKey { get; set; }
+
+		[JsonProperty("instanceIdentifier")]
+		public string InstanceIdentifier { get; set; }
 	}
 
 	internal class GenerateLicenseResponseModel

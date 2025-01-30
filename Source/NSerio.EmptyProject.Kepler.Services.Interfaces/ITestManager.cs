@@ -1,4 +1,5 @@
-﻿using Relativity.Kepler.Services;
+﻿using NSerio.EmptyProject.Core.Domains.Implementation;
+using Relativity.Kepler.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -17,5 +18,9 @@ namespace NSerio.EmptyProject.Kepler.Services.Interfaces
 		[HttpGet]
 		[Route("GenerateLicense/{instanceIdentifier}")]
 		Task<string> GenerateLicenseAsync(string instanceIdentifier);
+
+		[HttpPost]
+		[Route("ValidateLicense")]
+		Task<bool> ValidateLicenseAsync(ValidateLicenseRequestModel request);
 	}
 }
