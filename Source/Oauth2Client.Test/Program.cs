@@ -16,13 +16,16 @@ namespace Oauth2Client.Test
 	internal class Program
 	{
 		private static readonly string _OAUTH2_CLIENT_ID = "9140d76d8ad043b5b2bcc74e40f6d9e0";
+		private static readonly string _OAUTH2_CLIENT_ID_RESOURCE_OWNER = "a8bacdcc6a8d4890a8b588f5edd6a761";
+
 		private static readonly string _OAUTH2_CLIENT_SECRET = "724db8b57bd7259351dd4a8284e10682513f5051";
-		private static readonly string _RELATIVITY_INSTANCE = "https://nserio-us-development.relativity.one/";
+		private static readonly string _OAUTH2_CLIENT_SECRET_RESOURCE_OWNER = "3c9d5836608c0f9f51e08686e599a0acf174ff85";
+		private static readonly string _RELATIVITY_INSTANCE = "https://nserio-us-development.relativity.one";
 
 		static void Main(string[] args)
 		{
 			string oAuth2AccessToken = GetOAuth2AccessToken();
-			string defaultFileRepository = @"\\files.t013.esus025064.relativity.one\T013\Files\EDDS3663333";
+			string defaultFileRepository = @"\\files.t005.esus008192.relativity.one\T005\Files\Cimplifi\EDDS3663333\20250117\4876\f31f8629-82df-42e2-b62c-2e87372050db\81089354-9abb-4491-88da-0bd4ab1b3854_1.TIF";
 			GetTokenResult tokenResult = GetReadonlyTokenOauthAsync(defaultFileRepository, oAuth2AccessToken)
 				.ConfigureAwait(false)
 				.GetAwaiter()
@@ -64,7 +67,7 @@ namespace Oauth2Client.Test
 
 		private static string GetOAuth2AccessToken()
 		{
-			using (var clientToken = new TokenClient($"{_RELATIVITY_INSTANCE}/Relativity/Identity/connect/token", _OAUTH2_CLIENT_ID, _OAUTH2_CLIENT_SECRET))
+			using (var clientToken = new TokenClient($"{_RELATIVITY_INSTANCE}/Relativity/Identity/connect/token", _OAUTH2_CLIENT_ID_RESOURCE_OWNER, _OAUTH2_CLIENT_SECRET_RESOURCE_OWNER))
 			{
 				ITokenResponse token = clientToken.RequestClientCredentialsAsync("UserInfoAccess")
 					.ConfigureAwait(false)

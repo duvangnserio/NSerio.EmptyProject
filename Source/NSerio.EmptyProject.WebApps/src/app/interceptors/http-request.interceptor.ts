@@ -1,9 +1,9 @@
 import { HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
-import { KEPLER_SERVICE_MODULE } from '@app/app.constants';
 import { environment } from '@env/environment';
 
 export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
-  const baseUrl = `${environment.serviceHost || ''}/Relativity.REST/api/${KEPLER_SERVICE_MODULE}/`;
+  // const baseUrl = `${environment.serviceHost || ''}/Relativity.REST/api/${KEPLER_SERVICE_MODULE}/`;
+  const baseUrl = `${environment.serviceHost || ''}/`;
   const url = req.url.includes('assets') ? req.url : `${baseUrl}${req.url}`;
 
   const headers: any = {

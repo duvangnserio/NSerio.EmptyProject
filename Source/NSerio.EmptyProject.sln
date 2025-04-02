@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B32DDFAF-7E37-4391-A409-930DC6D55669}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "NSerio.EmptyProject.WebApps", "NSerio.EmptyProject.WebApps\NSerio.EmptyProject.WebApps.njsproj", "{3898C2E0-C608-4C81-9803-30D5BC2FA4CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oauth2Client.Test", "Oauth2Client.Test\Oauth2Client.Test.csproj", "{80AD4974-DCD9-4D5D-9019-3A8CF4F33A24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.NetFramework.Tests", "Console.NetFramework.Tests\Console.NetFramework.Tests.csproj", "{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,14 @@ Global
 		{80AD4974-DCD9-4D5D-9019-3A8CF4F33A24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80AD4974-DCD9-4D5D-9019-3A8CF4F33A24}.Release|x64.ActiveCfg = Release|Any CPU
 		{80AD4974-DCD9-4D5D-9019-3A8CF4F33A24}.Release|x64.Build.0 = Release|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Debug|x64.Build.0 = Debug|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Release|x64.ActiveCfg = Release|Any CPU
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +120,7 @@ Global
 		{80380BA2-7F74-4ED3-BE6A-C391694F89E2} = {5EB8630E-01DC-4B5E-B5E0-55D37A05E6D4}
 		{3898C2E0-C608-4C81-9803-30D5BC2FA4CD} = {8400E21E-C576-47EE-88E0-F5B822D65A26}
 		{80AD4974-DCD9-4D5D-9019-3A8CF4F33A24} = {8400E21E-C576-47EE-88E0-F5B822D65A26}
+		{D094622C-4D44-4F7F-A0D1-0171F1EAEFC3} = {8400E21E-C576-47EE-88E0-F5B822D65A26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8F7CC90-39CC-4359-A823-D20BD80D5087}

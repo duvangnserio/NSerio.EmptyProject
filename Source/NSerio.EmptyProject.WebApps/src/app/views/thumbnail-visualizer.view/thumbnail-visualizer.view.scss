@@ -1,0 +1,12 @@
+::ng-deep{
+
+  .thumbnail {
+    img {
+      transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+      object-fit: cover; /* Keeps the aspect ratio while covering */
+      border-radius: 8px; /* Optional for aesthetics */
+    }
+    height: 200px;
+  }
+
+}

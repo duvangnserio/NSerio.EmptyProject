@@ -1,0 +1,37 @@
+<div class="flex justify-center mb-4">
+  <p-selectButton
+    [options]="sizes"
+    [(ngModel)]="selectedSize"
+    optionLabel="label"
+    optionValue="value"
+    dataKey="value"></p-selectButton>
+</div>
+<div class="flex flex-wrap gap-3 justify-center">
+  @for (document of thumbnailDocuments(); track document.artifactId) {
+    <p-card [style]="{width: '200px'}" class="thumbnail-card">
+      <ng-template pTemplate="header">
+        <div class="flex justify-content-center">
+          <p-image
+            #imageComponent
+            class="thumbnail align-content-center"
+            [id]="document.artifactId"
+            [alt]="document.name"
+            [src]="document.thumbnailSrc"
+            [width]="selectedSize"
+            [height]="selectedSize"
+
+          />
+        </div>
+      </ng-template>
+      <div class="metadata-section">
+        <label
+          [for]="'checkbox_' + document.artifactId"
+          class="document-name"
+          [title]="document.name"
+        >
+          {{ document.name }}
+        </label>
+      </div>
+    </p-card>
+  }
+</div>
